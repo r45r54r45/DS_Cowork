@@ -28,17 +28,25 @@ public class Execute {
 			Iterator<ReadFile.InstructionSet> it = instructionList.iterator();
 			while (it.hasNext()) {
 				ReadFile.InstructionSet set = it.next();
-				if (set.instruction == "g") {
-					writer.write((String) object.get(Integer.parseInt(set.data1)));
-				} else if (set.instruction == "m") {
-					writer.write((String) object.get(object.min()));
-				} else if (set.instruction == "P") {
-					writer.write((String) object.printTree());
+				if (set.instruction.equals("g")) {
+					String temp=object.get(Integer.parseInt(set.data1));
+					if(temp==null)writer.write("fail");
+					else writer.write(temp.trim());
+				} else if (set.instruction.equals("m")) {
+					writer.write(object.get(object.min()).trim());
+				} else if (set.instruction.equals("P")) {
+					writer.write(object.printTree().trim());
+				} else if (set.instruction.equals("p")) {
+					object.put(Integer.parseInt(set.data1), set.data2);
+				} else if (set.instruction.equals("d")) {
+					object.delete(Integer.parseInt(set.data1));
+				} else if (set.instruction.equals("D")) {
+					object.deleteMin();
 				}
 			}
 			writer.write("\n");
 			if (TIME_CHECK) {
-				System.out.println(object.toString() + "의 "+i+"번 째 케이스에서 소요된 시간: " + (System.currentTimeMillis() - time_start));
+				System.out.println(object.toString().split("@")[0] + "의 "+i+"번 째 케이스에서 소요된 시간: " + (System.currentTimeMillis() - time_start));
 			}
 		}
 	}

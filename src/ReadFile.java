@@ -29,17 +29,17 @@ public class ReadFile {
 			dataInCase=new LinkedList<>();
 			while(st.hasMoreTokens()){
 				String temp=st.nextToken();
-				if(temp=="g"){
+				if(temp.equals("g")){
 					dataInCase.add(new InstructionSet(temp, st.nextToken()));
-				}else if(temp=="p"){
+				}else if(temp.equals("p")){
 					dataInCase.add(new InstructionSet(temp, st.nextToken() , st.nextToken()));
-				}else if(temp=="d"){
+				}else if(temp.equals("d")){
 					dataInCase.add(new InstructionSet(temp, st.nextToken()));
-				}else if(temp=="m"){
+				}else if(temp.equals("m")){
 					dataInCase.add(new InstructionSet(temp, null));
-				}else if(temp=="D"){
+				}else if(temp.equals("D")){
 					dataInCase.add(new InstructionSet(temp, null));
-				}else if(temp=="P"){
+				}else if(temp.equals("P")){
 					dataInCase.add(new InstructionSet(temp, null));
 				}
 			}
