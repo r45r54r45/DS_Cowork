@@ -23,6 +23,7 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	@Override
 	public void put(Key k, Value v) {
 		// TODO Auto-generated method stub
+		if(root==null)root=new Node<Key, Value>(k,v,1);
 		
 	}
 	@Override
@@ -44,6 +45,11 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	public String printTree() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	@Override
+	public int compare(Key x, Key y) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	
