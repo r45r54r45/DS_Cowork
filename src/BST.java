@@ -81,7 +81,7 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 		}
 		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
 		return n;
-	}
+	} 
 	@Override
 	public String printTree() {
 		// TODO Auto-generated method stub

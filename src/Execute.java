@@ -17,7 +17,7 @@ public class Execute {
 //		Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new Splay<Integer, String>(), reader.getCases());
 	}
-
+ 
 	private static void executeInstructions(CommonMethod<Integer, String> object, ArrayList<LinkedList<ReadFile.InstructionSet>> arrayList) {
 		long time_start = 0;
 		for (int i = 0; i < TEST_CASES_NUM; i++) {

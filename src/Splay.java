@@ -12,7 +12,7 @@ public class Splay <Key extends Comparable<Key>, Value> implements CommonMethod<
 		// TODO Auto-generated method stub
 		
 	}
-
+  
 	@Override
 	public Key min() {
 		// TODO Auto-generated method stub

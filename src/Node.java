@@ -10,7 +10,7 @@ public class Node <Key extends Comparable<Key>, Value>{
 		this.subTreeSize=newSubTreeSize;
 		this.left=null;
 		this.right=null;
-	}
+	} 
 	public Key getKey(){return id;}
 	public Value getValue(){return name;}
 	public int getSubTreeSize(){return subTreeSize;}

@@ -28,7 +28,7 @@ public class ReadFile {
 			StringTokenizer st=new StringTokenizer(line, " ");
 			dataInCase=new LinkedList<>();
 			while(st.hasMoreTokens()){
-				String temp=st.nextToken();
+				String temp=st.nextToken().trim();
 				if(temp.equals("g")){
 					dataInCase.add(new InstructionSet(temp, st.nextToken()));
 				}else if(temp.equals("p")){
@@ -42,7 +42,7 @@ public class ReadFile {
 				}else if(temp.equals("P")){
 					dataInCase.add(new InstructionSet(temp, null));
 				}
-			}
+			} 
 			caseList.add(dataInCase);
 		}
 		}catch(IOException e){

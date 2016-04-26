@@ -11,7 +11,7 @@ public class RB <Key extends Comparable<Key>, Value> implements CommonMethod<Key
 	public void put(Key k, Value v) {
 		// TODO Auto-generated method stub
 		
-	}
+	} 
 
 	@Override
 	public Key min() {

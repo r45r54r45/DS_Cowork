@@ -7,3 +7,4 @@ public interface CommonMethod <Key extends Comparable<Key>, Value> {
 	public void delete(Key k);
 	public String printTree();
 }
+ 

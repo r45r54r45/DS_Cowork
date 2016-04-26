@@ -15,6 +15,6 @@ public class WriteFile {
 				fw.close();
 		}catch(IOException e){
 			e.printStackTrace();
-		}		
+		}		 
 	}
 }
