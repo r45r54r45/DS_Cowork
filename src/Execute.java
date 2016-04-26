@@ -23,7 +23,7 @@ public class Execute {
 		for (int i = 0; i < TEST_CASES_NUM; i++) {
 			LinkedList<ReadFile.InstructionSet> instructionList=arrayList.get(i);
 			if (TIME_CHECK) {
-				time_start = System.currentTimeMillis();
+				time_start = System.nanoTime();
 			}
 			Iterator<ReadFile.InstructionSet> it = instructionList.iterator();
 			while (it.hasNext()) {
@@ -46,7 +46,7 @@ public class Execute {
 			}
 			writer.write("\n");
 			if (TIME_CHECK) {
-				System.out.println(object.toString().split("@")[0] + "의 "+i+"번 째 케이스에서 소요된 시간: " + (System.currentTimeMillis() - time_start));
+				System.out.println(object.toString().split("@")[0] + "의 "+i+"번 째 케이스에서 소요된 시간: " + (System.nanoTime() - time_start)+" ns");
 			}
 		}
 	}
