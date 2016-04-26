@@ -10,8 +10,9 @@ public class WriteFile {
 	public void write(String str){
 		try{
 			fw=new FileWriter(path,true);
-			fw.write(str+" ");
-			fw.close();
+			if(!str.equals("\n"))fw.write(str+" ");
+			else fw.write(str);
+				fw.close();
 		}catch(IOException e){
 			e.printStackTrace();
 		}		
