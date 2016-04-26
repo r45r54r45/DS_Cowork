@@ -37,12 +37,6 @@ public class RB <Key extends Comparable<Key>, Value> implements CommonMethod<Key
 		return null;
 	}
 
-	@Override
-	public int compare(Key x, Key y) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }
 
 

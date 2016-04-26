@@ -37,10 +37,4 @@ public class Splay <Key extends Comparable<Key>, Value> implements CommonMethod<
 		return null;
 	}
 
-	@Override
-	public int compare(Key x, Key y) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

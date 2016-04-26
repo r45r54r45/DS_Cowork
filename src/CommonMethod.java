@@ -6,5 +6,4 @@ public interface CommonMethod <Key extends Comparable<Key>, Value> {
 	public void deleteMin();
 	public void delete(Key k);
 	public String printTree();
-	public int compare(Key x, Key y);
 }
