@@ -1,3 +1,5 @@
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Key, Value>{
 	private Node<Key, Value> root;
@@ -83,8 +85,38 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	@Override
 	public String printTree() {
 		// TODO Auto-generated method stub
-		return "print tree";
+		String result="";
+		LinkedList<Node> queue=new LinkedList<>();
+		LinkedList<String> resultList=new LinkedList<>();
+		levelOrder(root, queue, resultList);
+		Iterator<String> it=resultList.iterator();
+		while(it.hasNext()){
+			result+=(it.next()+" ");
+		}
+		return result;
 	}
-	
-	
+	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
+	 {
+	  if(root == null)return;
+
+	  if(queue.isEmpty())
+	  {
+	   resultList.add(root.getKey().toString());
+	  }
+	  else
+	  {
+	   resultList.add(queue.getFirst().getKey().toString());
+	  }
+
+	  if(root.getLeft() != null)
+	  {
+	   queue.add(root.getLeft());
+	  }
+	  if(root.getRight() != null)
+	  {
+	   queue.add(root.getRight());
+	  }
+	  levelOrder(root.getLeft(),queue, resultList);
+	  levelOrder(root.getRight(),queue,resultList);
+	 }
 }
