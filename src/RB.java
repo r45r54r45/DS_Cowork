@@ -5,6 +5,7 @@ public class RB <Key extends Comparable<Key>, Value> implements CommonMethod<Key
 	public Value get(Key k) {
 		// TODO Auto-generated method stub
 		return null;
+//		f
 	}
 
 	@Override
