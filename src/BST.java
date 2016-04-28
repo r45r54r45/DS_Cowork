@@ -84,16 +84,15 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	} 
 	@Override
 	public String printTree() {
-		// TODO Auto-generated method stub
-		String result="";
+		StringBuilder result=new StringBuilder();
 		LinkedList<Node> queue=new LinkedList<>();
 		LinkedList<String> resultList=new LinkedList<>();
 		levelOrder(root, queue, resultList);
 		Iterator<String> it=resultList.iterator();
 		while(it.hasNext()){
-			result+=(it.next()+" ");
+			result.append(it.next()+" ");
 		}
-		return result;
+		return result.toString();
 	}
 	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
 	 {
