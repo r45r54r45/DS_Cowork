@@ -1,10 +1,10 @@
 
 public interface CommonMethod <Key extends Comparable<Key>, Value> {
-	public Value get(Key k);
-	public void put(Key k,Value v);
-	public Key min();
-	public void deleteMin();
-	public void delete(Key k);
-	public String printTree();
+	public Value get(Key k); //g
+	public void put(Key k,Value v); //p
+	public Key min();//m
+	public void deleteMin(); //D
+	public void delete(Key k); //d
+	public String printTree(); //P
 }
  
