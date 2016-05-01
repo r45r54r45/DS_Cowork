@@ -176,37 +176,116 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	}
 
 	@Override
-	public Key min() {
-		// TODO Auto-generated method stub
-		return null;
+	public Key min(){//m
+		if(isEmpty())return null;
+		return (Key)min(root).getKey();
 	}
-
+	private Node min(Node n){
+		if(n.getLeft()==null)return n;
+		return min(n.getLeft());
+	}
 	@Override
-	public void deleteMin() {
-		// TODO Auto-generated method stub
-		
+	public void deleteMin() {//D
+		if(isEmpty())throw new Error();
+		root=deleteMin(root);
+	}
+	private Node deleteMin(Node n){
+		if(n.getLeft()==null)return n.getRight();
+		n.setLeft(deleteMin(n.getLeft()));
+		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
+		return n;
 	}
 
 	@Override
 	public void delete(Key k) {
 		// TODO Auto-generated method stub
+		removeAVL(this.root,k);
 		
+	}
+	public void removeAVL(Node p,Key q){
+		if(p==null){
+			return;
+		}else{
+			int t=p.getKey().compareTo(q);
+			if(t>0){
+				removeAVL(p.getLeft(),q);
+			}else if(t<0){
+				removeAVL(p.getRight(),q);
+			}else if(t==0){
+				removeFoundNode(p);
+			}
+		}
+	}
+	public void removeFoundNode(Node q) {
+		  Node r;
+		  // at least one child of q, q will be removed directly
+		  if(q.getLeft()==null || q.getRight()==null) {
+		   // the root is deleted
+		   if(q.getParent()==null) {
+		    this.root=null;
+		    q=null;
+		    return;
+		   }
+		   r = q;
+		  } else {
+		   // q has two children --> will be replaced by successor
+		   r = successor(q);
+		   q.setId(r.getKey());
+		  }
+		  
+		  Node p;
+		  if(r.getLeft()!=null) {
+		   p = r.getLeft();
+		  } else {
+		   p = r.getRight();
+		  }
+		  
+		  if(p!=null) {
+		   p.setParent(r.getParent());
+		  }
+		  
+		  if(r.getParent()==null) {
+		   this.root = p;
+		  } else {
+		   if(r==r.getParent().getLeft()) {
+		    r.getParent().setLeft(p);
+		   } else {
+		    r.getParent().setRight(p);
+		   }
+		   // balancing must be done until the root is reached.
+		   recursiveBalance(r.getParent());
+		  }
+		  r = null;
+	}
+	public Node successor(Node q) {
+		  if(q.getRight()!=null) {
+		   Node r = q.getRight();
+		   while(r.getLeft()!=null) {
+		    r = r.getLeft();
+		   }
+		   return r;
+		  } else {
+		   Node p = q.getParent();
+		   while(p!=null && q==p.getRight()) {
+		    q = p;
+		    p = q.getParent();
+		   }
+		   return p;
+		  }
 	}
 
 	@Override
 	public String printTree() {
-		// TODO Auto-generated method stub
-		String result="";
+		StringBuilder result=new StringBuilder();
 		LinkedList<Node> queue=new LinkedList<>();
 		LinkedList<String> resultList=new LinkedList<>();
 		levelOrder(root, queue, resultList);
 		Iterator<String> it=resultList.iterator();
 		while(it.hasNext()){
-			result+=(it.next()+" ");
+			result.append(it.next()+" ");
 		}
-		return result;
+		return result.toString();
 	}
-	
 	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
 	 {
 	  if(root == null)return;
