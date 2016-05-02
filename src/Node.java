@@ -1,24 +1,18 @@
 
 public class Node <Key extends Comparable<Key>, Value>{
-	 private static final boolean RED   = true; 
-	 private static final boolean BLACK = false;
-	 
 	private Key id;
 	private Value name;
 	private int balance;
 	private int subTreeSize;
 	private Node<Key, Value> left, right, parent;
-	private boolean color;
 	public Node(Key k) {
 		  left = right = parent = null;
 		  balance = 0;
-		  this.color = RED;
 		  this.id= k;
 	}
 	public Node(Key newId, Value newName, int newSubTreeSize){
 		this.id=newId;
 		this.name=newName;
-		this.color = RED;
 		this.subTreeSize=newSubTreeSize;
 		this.left=null;
 		this.right=null;
