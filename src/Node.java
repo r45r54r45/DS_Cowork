@@ -23,6 +23,7 @@ public class Node <Key extends Comparable<Key>, Value>{
 		this.left=null;
 		this.right=null;
 	} 
+	public boolean getColor(){return color;}
 	public Key getKey(){return id;}
 	public Value getValue(){return name;}
 	public int getBalance(){return balance;}
