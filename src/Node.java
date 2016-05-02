@@ -2,7 +2,7 @@
 public class Node <Key extends Comparable<Key>, Value>{
 	private Key id;
 	private Value name;
-	public int balance;
+	private int balance;
 	private int subTreeSize;
 	private Node<Key, Value> left, right, parent;
 	public Node(Key k) {
@@ -42,5 +42,9 @@ public class Node <Key extends Comparable<Key>, Value>{
 	}
 	public void setSubTreeSize(int newSubTreeSize) {
 		this.subTreeSize = newSubTreeSize;
+	}
+	public void setbal(int bal) {
+		// TODO Auto-generated method stub
+		this.balance=bal;
 	}
 }
