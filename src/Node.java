@@ -15,6 +15,13 @@ public class Node <Key extends Comparable<Key>, Value>{
 		  this.color = RED;
 		  this.id= k;
 	}
+	public Node(Key newId, Value newName){
+		this.id=newId;
+		this.name=newName;
+		this.color = RED;
+		this.left=null;
+		this.right=null;
+	} 
 	public Node(Key newId, Value newName, int newSubTreeSize){
 		this.id=newId;
 		this.name=newName;
@@ -24,6 +31,7 @@ public class Node <Key extends Comparable<Key>, Value>{
 		this.right=null;
 	} 
 	public boolean getColor(){return color;}
+	public void setColor(boolean c){this.color = c;}
 	public Key getKey(){return id;}
 	public Value getValue(){return name;}
 	public int getBalance(){return balance;}
