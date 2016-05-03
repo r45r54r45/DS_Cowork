@@ -53,8 +53,7 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	}
 	@Override
 	public void deleteMin() {
-		if(isEmpty())throw new Error();
-		root=deleteMin(root);
+		if(!isEmpty())root=deleteMin(root);
 	}
 	private Node deleteMin(Node n){
 		if(n.getLeft()==null)return n.getRight();
