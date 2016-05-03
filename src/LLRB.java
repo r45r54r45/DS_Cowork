@@ -1,3 +1,5 @@
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<Key, Value> {
 	 private static final boolean RED   = true; 
@@ -149,9 +151,40 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 
 	@Override
 	public String printTree() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder result=new StringBuilder();
+		LinkedList<Node> queue=new LinkedList<>();
+		LinkedList<String> resultList=new LinkedList<>();
+		levelOrder(root, queue, resultList);
+		Iterator<String> it=resultList.iterator();
+		while(it.hasNext()){
+			result.append(it.next()+" ");
+		}
+		return result.toString();
 	}
+	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
+	 {
+	  if(root == null)return;
+
+	  if(queue.isEmpty())
+	  {
+	   resultList.add(root.getKey().toString());
+	  }
+	  else
+	  {
+	   resultList.add(queue.getFirst().getKey().toString());
+	  }
+
+	  if(root.getLeft() != null)
+	  {
+	   queue.add(root.getLeft());
+	  }
+	  if(root.getRight() != null)
+	  {
+	   queue.add(root.getRight());
+	  }
+	  levelOrder(root.getLeft(),queue, resultList);
+	  levelOrder(root.getRight(),queue,resultList);
+	 }
 
 	void colorFlip(Node h){
 		h.setColor(!h.getColor());
