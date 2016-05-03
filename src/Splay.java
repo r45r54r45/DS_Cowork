@@ -1,6 +1,6 @@
 
 public class Splay <Key extends Comparable<Key>, Value> implements CommonMethod<Key, Value> {
-
+	private Node<Key, Value> root;
 	@Override
 	public Value get(Key k) {
 		// TODO Auto-generated method stub
@@ -40,7 +40,7 @@ public class Splay <Key extends Comparable<Key>, Value> implements CommonMethod<
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
-		
+		root=null;
 	}
 
 }

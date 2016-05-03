@@ -255,7 +255,7 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 		}
 		return result.toString();
 	}
-	//leafnode 가 null인거를 공백으로 표시해야하함 
+	
 	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
 	 {
 	  Node nullNode = new Node(" ");
@@ -288,6 +288,6 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
-		
+		root=null;
 	}
 }
