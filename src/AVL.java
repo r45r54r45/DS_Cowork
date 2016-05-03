@@ -162,12 +162,13 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	}
 	@Override
 	public void deleteMin() {//D
-		if(!isEmpty())root=deleteMin(root);
+		if(!isEmpty())root=deleteMin(root);	
 	}
 	private Node deleteMin(Node n){
 		if(n.getLeft()==null)return n.getRight();
 		n.setLeft(deleteMin(n.getLeft()));
 		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
+		recursiveBalance(n);//delete 후 left right balance맞추기 
 		return n;
 	}
 
@@ -254,8 +255,10 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 		}
 		return result.toString();
 	}
+	//leafnode 가 null인거를 공백으로 표시해야하함 
 	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
 	 {
+	  Node nullNode = new Node(" ");
 	  if(root == null)return;
 
 	  if(queue.isEmpty())
@@ -270,10 +273,14 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	  if(root.getLeft() != null)
 	  {
 	   queue.add(root.getLeft());
+	  }else if(root.getLeft() == null){
+		 queue.add(nullNode);
 	  }
 	  if(root.getRight() != null)
 	  {
 	   queue.add(root.getRight());
+	  }else if(root.getRight() == null){
+		 queue.add(nullNode);
 	  }
 	  levelOrder(root.getLeft(),queue, resultList);
 	  levelOrder(root.getRight(),queue,resultList);
