@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 public class Execute {
 	private static boolean TIME_CHECK = true;
-	private static int TEST_CASES_NUM = 3;
+	private static int TEST_CASES_NUM = 4;
 	private static WriteFile writer;
 
 	public static void main(String[] args) {
