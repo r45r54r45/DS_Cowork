@@ -12,7 +12,10 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 		if(n==null)return 0;
 		else return n.getSubTreeSize();
 	}
-	public boolean isRed(Node n){ return n.getColor();}
+	public boolean isRed(Node n){ 
+		if (n==null) return false;
+		return (n.getColor());
+		}
 	
 	public LLRB(){
 		root=null;
@@ -41,14 +44,18 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 	
 	public Node put(Node h, Key k, Value v) {
 		// TODO Auto-generated method stub
-		   if (h == null) return (new Node<Key, Value>(k, v));
-	       if (isRed(h.getLeft()) && isRed(h.getRight())) colorFlip(h);
+		   if (h == null) return (new Node<Key, Value>(k, v,1));
 	       int cmp = k.compareTo((Key)h.getKey());
-	       if (cmp == 0) h.setName(v); 
-	       else if (cmp < 0) h.setLeft(put(h.getLeft(), k, v));
-	       else  h.setRight(put(h.getRight(), k, v));
+	       if(cmp<0)  h.setLeft(put(h.getLeft(), k, v));
+	       else if (cmp>0) h.setRight(put(h.getRight(), k, v));
+	       else h.setName(v); 
+	      //fix up any right leaning links or links with sequential red
+	       if((h.getLeft() == null) || h.getRight() == null)
 	       if (isRed(h.getRight()) && !isRed(h.getLeft())) h = rotateLeft(h);
 	       if (isRed(h.getLeft()) && isRed(h.getLeft().getLeft())) h = rotateRight(h);
+	       if (isRed(h.getLeft()) && isRed(h.getRight())) colorFlip(h);
+	       
+	       h.setSubTreeSize(1+size(h.getLeft())+size(h.getRight()));
 	       return h;   
 	       } 
 	
