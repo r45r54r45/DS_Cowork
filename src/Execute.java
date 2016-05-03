@@ -12,7 +12,7 @@ public class Execute {
 		ReadFile reader = new ReadFile("input.txt");
 		writer = new WriteFile("output.txt");
 		Execute.executeInstructions(new BST<Integer, String>(), reader.getCases());
-		Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
+//		Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new RB<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new Splay<Integer, String>(), reader.getCases());
@@ -48,6 +48,7 @@ public class Execute {
 			if (TIME_CHECK) {
 				System.out.println(object.toString().split("@")[0] + "의 "+i+"번 째 케이스에서 소요된 시간: " + (System.nanoTime() - time_start)+" ns");
 			}
+			object.reset();
 		}
 	}
 }

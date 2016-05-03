@@ -12,6 +12,9 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	public BST(){
 		root=null;
 	}
+	public void reset(){
+		root=null;
+	}
 	public BST(Key k,Value v){
 		root=new Node<Key, Value>(k,v,1);
 	}

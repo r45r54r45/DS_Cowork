@@ -37,4 +37,10 @@ public class Splay <Key extends Comparable<Key>, Value> implements CommonMethod<
 		return null;
 	}
 
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
