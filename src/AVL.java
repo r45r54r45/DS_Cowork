@@ -258,15 +258,16 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	
 	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
 	 {
-	  Node nullNode = new Node(" ");
+	  Node<Key, Value> nullNode=null;
+	  
 	  if(root == null)return;
-
 	  if(queue.isEmpty())
 	  {
 	   resultList.add(root.getKey().toString());
 	  }
 	  else
-	  {
+	  {if(queue.getFirst()==nullNode)
+		  resultList.add(" ");
 	   resultList.add(queue.getFirst().getKey().toString());
 	  }
 
