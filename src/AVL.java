@@ -49,37 +49,36 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 			n.setRight(put(n.getRight(),k,v));
 			recursiveBalance(n);
 		}
-		else {
-			n.setName(v);
-		}
+		else n.setName(v);
 		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
 		return n;
 	}
 	public void recursiveBalance(Node cur) {
 		  Balance(cur);
 		  int balance = cur.getBalance();
-		  if(balance==-2) {
-		   if(height(cur.getLeft().getLeft())>=height(cur.getLeft().getRight())) {
-		    cur = rotateRight(cur);
-		   } else {
-		    cur = doubleRotateLeftRight(cur);
-		   }
-		  } else if(balance==2) {
-		   if(height(cur.getRight().getRight())>=height(cur.getRight().getLeft())) {
-		    cur = rotateLeft(cur);
-		   } else {
-		    cur = doubleRotateRightLeft(cur);
-		   }
+		  if(balance==2){//LL or LR
+			   if(height(cur.getLeft().getLeft())>=height(cur.getLeft().getRight())) {//LL
+			    cur = rotateLeft(cur);
+			   } else {//LR
+			    cur = doubleRotateLeftRight(cur);
+			   }
+		  }else if(balance==-2){//RR or RL
+			   if(height(cur.getRight().getRight())>=height(cur.getRight().getLeft())) {//RR
+				    cur = rotateRight(cur);
+			   } else {//RL
+				    cur = doubleRotateRightLeft(cur);
+			   }
 		  }
-		  if(cur.getParent()!=null) {
-		   recursiveBalance(cur.getParent());
-		  } else {
+		  if(cur.getParent()!=null){
+			   recursiveBalance(cur.getParent());
+		  }else {
 		   this.root = cur;
 		  }
 	}
-	 public Node rotateLeft(Node n) {
+	 public Node rotateRight(Node n) {
 		  Node v = n.getRight();
-		  v.setParent(n.getParent());
+		  if(n.getParent()!=null)
+			  v.setParent(n.getParent());
 		  n.setRight(v.getLeft());
 		  if(n.getRight()!=null) {
 		   n.getRight().setParent(n);
@@ -97,9 +96,10 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 		  Balance(v);
 		  return v;
 	}
-	public Node rotateRight(Node n) {
+	public Node rotateLeft(Node n) {
 		  Node v = n.getLeft();
-		  v.setParent(n.getParent());
+		  if(n.getParent()!=null)
+			  v.setParent(n.getParent());
 		  n.setLeft(v.getRight());
 		  if(n.getLeft()!=null) {
 		   n.getLeft().setParent(n);
@@ -118,23 +118,23 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 		  return v;
 	}
 	public Node doubleRotateLeftRight(Node u) {
-		  u.setLeft(rotateLeft(u.getLeft()));
+		  u.setLeft(rotateRight(u.getLeft()));
+		  return rotateLeft(u);
+	}
+	public Node doubleRotateRightLeft(Node u) {
+		  u.setRight(rotateLeft(u.getRight()));
 		  return rotateRight(u);
 	}
-	 public Node doubleRotateRightLeft(Node u) {
-		  u.setRight(rotateRight(u.getRight()));
-		  return rotateLeft(u);
-		 }
 	private void Balance(Node cur) {
-		  int bal = height(cur.getRight())-height(cur.getLeft());
+		  int bal = height(cur.getLeft())-height(cur.getRight());
 		  cur.setBalance(bal);
 	}
 	private int height(Node cur) {
 		  if(cur==null) {
-		   return -1;
+		   return 0;
 		  }
 		  if(cur.getLeft()==null && cur.getRight()==null) {
-		   return 0;
+		   return 1;
 		  } else if(cur.getLeft()==null) {
 		   return 1+height(cur.getRight());
 		  } else if(cur.getRight()==null) {
@@ -150,7 +150,6 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 		   return b;
 		  }
 	}
-
 	@Override
 	public Key min(){//m
 		if(isEmpty())return null;
@@ -195,7 +194,6 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	public void removeFoundNode(Node q) {
 		  Node r;
 		  if(q.getLeft()==null || q.getRight()==null) {
-		   // the root is deleted
 		   if(q.getParent()==null) {
 		    this.root=null;
 		    q=null;
