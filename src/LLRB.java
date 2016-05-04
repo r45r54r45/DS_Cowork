@@ -1,5 +1,6 @@
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<Key, Value> {
 	 private static final boolean RED   = true; 
@@ -50,7 +51,6 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 	       else if (cmp>0) h.setRight(put(h.getRight(), k, v));
 	       else h.setName(v); 
 	      //fix up any right leaning links or links with sequential red
-	       if((h.getLeft() == null) || h.getRight() == null)
 	       if (isRed(h.getRight()) && !isRed(h.getLeft())) h = rotateLeft(h);
 	       if (isRed(h.getLeft()) && isRed(h.getLeft().getLeft())) h = rotateRight(h);
 	       if (isRed(h.getLeft()) && isRed(h.getRight())) colorFlip(h);
@@ -75,6 +75,12 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 		x.setColor(h.getColor());
 		h.setColor(RED);
 		return x;
+		}
+	
+	void colorFlip(Node h){
+		h.setColor(!h.getColor());
+		h.getLeft().setColor(h.getLeft().getColor());
+		h.getRight().setColor(h.getRight().getColor());
 		}
 
 	public boolean isEmpty(){return (size()==0);}
@@ -193,15 +199,10 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 	  levelOrder(root.getRight(),queue,resultList);
 	 }
 
-	void colorFlip(Node h){
-		h.setColor(!h.getColor());
-		h.getLeft().setColor(h.getLeft().getColor());
-		h.getRight().setColor(h.getRight().getColor());
-		}
-	@Override
+
 	public void reset() {
 		// TODO Auto-generated method stub
-		
+		root=null;
 	}
 
 }
