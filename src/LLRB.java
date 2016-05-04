@@ -198,5 +198,10 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 		h.getLeft().setColor(h.getLeft().getColor());
 		h.getRight().setColor(h.getRight().getColor());
 		}
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
