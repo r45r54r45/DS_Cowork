@@ -104,6 +104,7 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 	public void deleteMin() {
 		// TODO Auto-generated method stub
 		 root = deleteMin(root);
+		 if(root!=null)
 		 root.setColor(BLACK); }
 	
 	private Node deleteMin(Node h) {
