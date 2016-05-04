@@ -47,7 +47,7 @@ public class Execute {
 			}
 			writer.write("\n");
 			if (TIME_CHECK) {
-				System.out.println(object.toString().split("@")[0] + "�쓽 "+i+"踰� 吏� 耳��씠�뒪�뿉�꽌 �냼�슂�맂 �떆媛�: " + (System.nanoTime() - time_start)+" ns");
+				System.out.println(object.toString().split("@")[0] + "'s "+i+" turn execute time: " + (System.nanoTime() - time_start)+" ns");
 			}
 			object.reset();
 		}
