@@ -36,7 +36,7 @@ public class Execute {
 				} else if (set.instruction.equals("m")) {
 					writer.write(object.get(object.min()).trim());
 				} else if (set.instruction.equals("P")) {
-					writer.write(object.printTree().trim());
+					writer.write(object.printTree());
 				} else if (set.instruction.equals("p")) {
 					object.put(Integer.parseInt(set.data1), set.data2);
 				} else if (set.instruction.equals("d")) {
