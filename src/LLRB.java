@@ -210,6 +210,11 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 		   return b;
 		  }
 	}
+	void colorFlip(Node h){
+		h.setColor(!h.getColor());
+		h.getLeft().setColor(h.getLeft().getColor());
+		h.getRight().setColor(h.getRight().getColor());
+		}
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
