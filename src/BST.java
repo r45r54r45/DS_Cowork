@@ -84,43 +84,57 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
 		return n;
 	} 
+	private int height(Node cur) {
+		  if(cur==null) {
+		   return -1;
+		  }
+		  if(cur.getLeft()==null && cur.getRight()==null) {
+		   return 0;
+		  } else if(cur.getLeft()==null) {
+		   return 1+height(cur.getRight());
+		  } else if(cur.getRight()==null) {
+		   return 1+height(cur.getLeft());
+		  } else {
+		   return 1+maximum(height(cur.getLeft()),height(cur.getRight()));
+		  }
+	}
+	private int maximum(int a, int b) {
+		  if(a>=b) {
+		   return a;
+		  } else {
+		   return b;
+		  }
+	}
 	@Override
 	public String printTree() {
-		StringBuilder result=new StringBuilder();
+		LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
 		
-		LinkedList<String> resultList=new LinkedList<>();
-		levelOrder(root, resultList);
-		Iterator<String> it=resultList.iterator();
-		while(it.hasNext()){
-			result.append(it.next()+" ");
+		myQueue.offer(root);
+		
+		String returnString = "";
+		Node<Key,Value> temp;
+		int count = 0;
+		int level = 0;
+		
+		while (level <= height(root)) {
+			temp = myQueue.poll();
+			if (temp == null) {
+				returnString += " ";
+				myQueue.offer(null);
+				myQueue.offer(null);
+			}
+			else {
+				returnString +=" "+temp.getKey().toString();
+				myQueue.offer(temp.getLeft());
+				myQueue.offer(temp.getRight());
+			}
+			count++;
+			if (count >= Math.pow(2, level)) {
+				level++;
+				count = 0;
+			}
 		}
-		return result.toString();
+		return returnString.substring(1);
 	}
-	private void levelOrder(Node root, LinkedList<String> resultList ){
-		if(root == null)return ;
-		LinkedList<Node> current=new LinkedList<>();
-		LinkedList<Node> next=new LinkedList<>();
-		current.add(root);
-		
-		while(!current.isEmpty()){
-		  Node node = current.remove();
-		  if(node.getLeft() != null){
-			  next.add(node.getLeft());
-		  }else{
-			  next.add(new Node(null));
-		  }
-		  if(node.getRight() != null){
-			  next.add(node.getRight());
-		  }else{
-			  next.add(new Node(null));
-		  }
-		  if(node.getKey()!=null) resultList.add(node.getKey().toString());
-		  else resultList.add("");
-		  
-		  if(current.isEmpty()){
-		   current = next;
-		   next = new LinkedList<Node>();
-		  }
-		 }	
-	}
+
 }
