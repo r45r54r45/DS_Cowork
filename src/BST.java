@@ -87,37 +87,40 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	@Override
 	public String printTree() {
 		StringBuilder result=new StringBuilder();
-		LinkedList<Node> queue=new LinkedList<>();
+		
 		LinkedList<String> resultList=new LinkedList<>();
-		levelOrder(root, queue, resultList);
+		levelOrder(root, resultList);
 		Iterator<String> it=resultList.iterator();
 		while(it.hasNext()){
 			result.append(it.next()+" ");
 		}
 		return result.toString();
 	}
-	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
-	 {
-	  if(root == null)return;
-
-	  if(queue.isEmpty())
-	  {
-	   resultList.add(root.getKey().toString());
-	  }
-	  else
-	  {
-	   resultList.add(queue.getFirst().getKey().toString());
-	  }
-
-	  if(root.getLeft() != null)
-	  {
-	   queue.add(root.getLeft());
-	  }
-	  if(root.getRight() != null)
-	  {
-	   queue.add(root.getRight());
-	  }
-	  levelOrder(root.getLeft(),queue, resultList);
-	  levelOrder(root.getRight(),queue,resultList);
-	 }
+	private void levelOrder(Node root, LinkedList<String> resultList ){
+		if(root == null)return ;
+		LinkedList<Node> current=new LinkedList<>();
+		LinkedList<Node> next=new LinkedList<>();
+		current.add(root);
+		
+		while(!current.isEmpty()){
+		  Node node = current.remove();
+		  if(node.getLeft() != null){
+			  next.add(node.getLeft());
+		  }else{
+			  next.add(new Node(null));
+		  }
+		  if(node.getRight() != null){
+			  next.add(node.getRight());
+		  }else{
+			  next.add(new Node(null));
+		  }
+		  if(node.getKey()!=null) resultList.add(node.getKey().toString());
+		  else resultList.add("");
+		  
+		  if(current.isEmpty()){
+		   current = next;
+		   next = new LinkedList<Node>();
+		  }
+		 }	
+	}
 }
