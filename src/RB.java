@@ -148,7 +148,12 @@ public class RB <Key extends Comparable<Key>, Value> implements CommonMethod<Key
 			}
 		
 		private Node delete(Node h, Key k){
-			if (k.compareTo((Key)h.getKey()) < 0){              
+			if (k.compareTo((Key)h.getKey()) < 0) delete(h.getLeft(), k);
+			else if (k.compareTo((Key)h.getKey()) > 0) delete(h.getRight(), k);
+			else delete_one_child(h);
+
+			
+		/*	if (k.compareTo((Key)h.getKey()) < 0){              
 				if (!isRed(h.getLeft())){
 					if(!isRed(h.getLeft().getRight()) &&  !isRed(h.getLeft().getLeft())) h = moveRedLeft(h); 
 					if(!isRed(h.getLeft().getRight()) &&  isRed(h.getLeft().getLeft())) h.setLeft(rotateRight(h.getLeft())); 
@@ -168,16 +173,43 @@ public class RB <Key extends Comparable<Key>, Value> implements CommonMethod<Key
 					h.setRight(deleteMin(h.getRight())); 
 					} 
 				else h.setRight(delete(h.getRight(), k));
-				}
-		       return fixUp(h);
+				}*/
+		       return h;
 		       }
 
 
 	@Override
 	public String printTree() {
-		// TODO Auto-generated method stub
-		return null;
+	LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
+		
+		myQueue.offer(root);
+		
+		String returnString = "";
+		Node<Key,Value> temp;
+		int count = 0;
+		int level = 0;
+		
+		while (level <= root.getSubTreeSize()) {
+			temp = myQueue.poll();
+			if (temp == null) {
+				returnString += " ";
+				myQueue.offer(null);
+				myQueue.offer(null);
+			}
+			else {
+				returnString +=" "+temp.getKey().toString();
+				myQueue.offer(temp.getLeft());
+				myQueue.offer(temp.getRight());
+			}
+			count++;
+			if (count >= Math.pow(2, level)) {
+				level++;
+				count = 0;
+			}
+		}
+		return returnString.substring(1);
 	}
+
 
 	@Override
 	public void reset() {
@@ -185,6 +217,131 @@ public class RB <Key extends Comparable<Key>, Value> implements CommonMethod<Key
 		root = null;
 	}
 
+
+	
+	public Node sibling (Node n){
+		if((n==null) || (n.getParent() == null)) return null; //no parents means no sibling
+		if(n==n.getParent().getLeft()) return n.getParent().getRight();
+		else return n.getParent().getLeft();
+	}
+	
+	public void delete_one_child(Node n)
+	{
+	 /*
+	  * Precondition: n has at most one non-null child. if it's leaf
+	  */
+	
+	Node child = null;
+	if (n.getRight() != null){
+		child = new Node(n.getLeft().getKey(), n.getLeft().getValue(), n.getLeft().getSubTreeSize());
+	}
+	else {child = new Node(n.getRight().getKey(), n.getRight().getValue(), n.getRight().getSubTreeSize());}
+
+	Node tmp = n;
+	n = child;
+	child = tmp;
+	 
+	 if (n.getColor() == BLACK) {
+	  if (child.getColor() == RED)
+	   child.setColor(BLACK);
+	  else
+	   delete_case1(child);
+	 }
+	 n = null;
+	}
+	
+	private  void delete_case1(Node n)
+	{
+	 if (n.getParent() != null)
+	  delete_case2(n);
+	}
+	
+	private void delete_case2(Node n)
+	{
+		Node s = sibling(n);
+
+	 if (s.getColor() == RED) {
+	  n.getParent().setColor(RED);
+	  s.setColor(BLACK);
+	  if (n == n.getParent().getLeft())
+	   rotateLeft(n.getParent());
+	  else
+	   rotateRight(n.getParent());
+	 }
+	 delete_case3(n);
+	}
+	
+	private void delete_case3(Node n)
+	{
+	 Node s = sibling(n);
+
+	 if ((n.getParent().getColor() == BLACK) &&
+	     (s.getColor() == BLACK) &&
+	     (s.getLeft().getColor() == BLACK) &&
+	     (s.getRight().getColor() == BLACK)) {
+	  s.setColor(RED);
+	  delete_case1(n.getParent());
+	 } else
+	  delete_case4(n);
+	}
+	
+	private void delete_case4(Node n)
+	{
+		 Node s = sibling(n);
+
+	 if ((n.getParent().getColor() == RED) &&
+	     (s.getColor() == BLACK) &&
+	     (s.getLeft().getColor() == BLACK) &&
+	     (s.getRight().getColor() == BLACK)) {
+	  s.setColor(RED);
+	  n.getParent().setColor(BLACK);
+	 } else
+	  delete_case5(n);
+	}
+	
+	void delete_case5(Node n)
+	{
+		 Node s = sibling(n);
+
+	 if  (s.getColor() == BLACK) { /* this if statement is trivial,
+	due to case 2 (even though case 2 changed the sibling to a sibling's child,
+	the sibling's child can't be red, since no red parent can have a red child). */
+	/* the following statements just force the red to be on the left of the left of the parent,
+	   or right of the right, so case six will rotate correctly. */
+	  if ((n == n.getParent().getLeft()) &&
+	      (s.getRight().getColor() == BLACK) &&
+	      (s.getLeft().getColor() == RED)) { /* this last test is trivial too due to cases 2-4. */
+	   s.setColor(RED);
+	   s.getLeft().setColor(BLACK);
+	   rotateRight(s);
+	  } else if ((n == n.getParent().getRight()) &&
+	             (s.getLeft().getColor() == BLACK) &&
+	             (s.getRight().getColor() == RED)) {/* this last test is trivial too due to cases 2-4. */
+	   s.setColor(RED);
+	   s.getRight().setColor(BLACK);
+	   rotateLeft(s);
+	  }
+	 }
+	 delete_case6(n);
+	}
+	
+	void delete_case6(Node n)
+	{
+		 Node s = sibling(n);
+
+	 s.setColor(n.getParent().getColor());
+	 n.getParent().setColor(BLACK);
+
+	 if (n == n.getParent().getLeft()) {
+	  s.getRight().setColor(BLACK);
+	  rotateLeft(n.getParent());
+	 } 
+	 else {
+	  s.getLeft().setColor(BLACK);
+	  rotateRight(n.getParent());
+	 }
+	}
+	
 	
 	
 }

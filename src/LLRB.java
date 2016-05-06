@@ -78,7 +78,7 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 		return x;
 		}
 	
-	void colorFlip(Node h){
+	public void colorFlip(Node h){
 		h.setColor(!h.getColor());
 		h.getLeft().setColor(h.getLeft().getColor());
 		h.getRight().setColor(h.getRight().getColor());
@@ -166,7 +166,7 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 
 	@Override
 	public String printTree() {
-		LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
+	LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
 		
 		myQueue.offer(root);
 		
@@ -195,6 +195,8 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 		}
 		return returnString.substring(1);
 	}
+
+
 	private int height(Node cur) {
 		  if(cur==null) {
 		   return -1;
@@ -216,7 +218,7 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 		   return b;
 		  }
 	}
-<<<<<<< HEAD
+
 	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
 	 {
 	  if(root == null)return;
@@ -243,14 +245,9 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 	 }
 
 
-=======
-	void colorFlip(Node h){
-		h.setColor(!h.getColor());
-		h.getLeft().setColor(h.getLeft().getColor());
-		h.getRight().setColor(h.getRight().getColor());
-		}
+
 	@Override
->>>>>>> origin/master
+
 	public void reset() {
 		// TODO Auto-generated method stub
 		root=null;
