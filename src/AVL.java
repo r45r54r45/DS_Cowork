@@ -36,21 +36,21 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	@Override
 	public void put(Key k, Value v) {
 		// TODO Auto-generated method stub
-		root=put(root,k,v);
+		root=put(root,k,v);	
+		//System.out.print(get(k)+" ");
 	}
 	private Node put(Node n, Key k, Value v){
-		if(n==null)return new Node(k,v,1);
+		if(n==null)return new Node<Key,Value>(k,v,1);
 		int t=n.getKey().compareTo(k);
 		if(t>0){
 			n.setLeft(put(n.getLeft(),k,v));
-			recursiveBalance(n);
 		}
 		else if(t<0){
 			n.setRight(put(n.getRight(),k,v));
-			recursiveBalance(n);
 		}
 		else n.setName(v);
 		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
+		recursiveBalance(n);
 		return n;
 	}
 	public void recursiveBalance(Node cur) {
@@ -131,10 +131,10 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	}
 	private int height(Node cur) {
 		  if(cur==null) {
-		   return 0;
+		   return -1;
 		  }
 		  if(cur.getLeft()==null && cur.getRight()==null) {
-		   return 1;
+		   return 0;
 		  } else if(cur.getLeft()==null) {
 		   return 1+height(cur.getRight());
 		  } else if(cur.getRight()==null) {
@@ -173,117 +173,89 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 
 	@Override
 	public void delete(Key k) {
-		// TODO Auto-generated method stub
-		removeAVL(this.root,k);
-		
+		root=delete(root,k);
 	}
-	public void removeAVL(Node p,Key q){
-		if(p==null){
-			return;
-		}else{
-			int t=p.getKey().compareTo(q);
-			if(t>0){
-				removeAVL(p.getLeft(),q);
-			}else if(t<0){
-				removeAVL(p.getRight(),q);
-			}else if(t==0){
-				removeFoundNode(p);
-			}
+//	private Node delete(Node n, Key k){
+//		if(n==null)return null;
+//		int t=n.getKey().compareTo(k);
+//		if(t>0){
+//			n.setLeft(delete(n.getLeft(),k));
+//			recursiveBalance(n);
+//		}
+//		else if(t<0){
+//			n.setRight(delete(n.getRight(),k));
+//			recursiveBalance(n);
+//		}
+//		else{
+//			if(n.getRight()==null)return n.getLeft();
+//			if(n.getLeft()==null)return n.getRight();
+//			Node target=n;
+//			n=min(target.getRight());
+//			n.setRight(delete(n.getRight(),(Key)n.getKey()));
+////			n.setRight(deleteMin(target.getRight()));
+////			n.setLeft(target.getLeft());
+//		}
+//		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
+//		recursiveBalance(n);
+//		return n;
+//	}
+	private Node delete(Node n, Key k){
+		if(n==null)return null;
+		int t=n.getKey().compareTo(k);
+		if(t>0){
+			n.setLeft(delete(n.getLeft(),k));
+			recursiveBalance(n);
 		}
-	}
-	public void removeFoundNode(Node q) {
-		  Node r;
-		  if(q.getLeft()==null || q.getRight()==null) {
-		   if(q.getParent()==null) {
-		    this.root=null;
-		    q=null;
-		    return;
-		   }
-		   r = q;
-		  } else {
-		   r = successor(q);
-		   q.setId(r.getKey());
-		  }
-		  Node p;
-		  if(r.getLeft()!=null) {
-		   p = r.getLeft();
-		  } else {
-		   p = r.getRight();
-		  }
-		  if(p!=null) {
-		   p.setParent(r.getParent());
-		  }
-		  if(r.getParent()==null) {
-		   this.root = p;
-		  } else {
-		   if(r==r.getParent().getLeft()) {
-		    r.getParent().setLeft(p);
-		   } else {
-		    r.getParent().setRight(p);
-		   }
-		   recursiveBalance(r.getParent());
-		  }
-		  r = null;
-	}
-	public Node successor(Node q) {
-		  if(q.getRight()!=null) {
-		   Node r = q.getRight();
-		   while(r.getLeft()!=null) {
-		    r = r.getLeft();
-		   }
-		   return r;
-		  } else {
-		   Node p = q.getParent();
-		   while(p!=null && q==p.getRight()) {
-		    q = p;
-		    p = q.getParent();
-		   }
-		   return p;
-		  }
+		else if(t<0){
+			n.setRight(delete(n.getRight(),k));
+			recursiveBalance(n);
+		}
+		else{
+			if (n.getLeft() == null && n.getRight() == null)
+				return null;
+			if(n.getLeft()==null)return n.getRight();
+			if(n.getRight()==null)return n.getLeft();
+			Node target=n;
+			n=min(target.getRight());
+			n.setRight(deleteMin(target.getRight()));
+			n.setLeft(target.getLeft());
+			
+		}
+		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
+		recursiveBalance(n);
+		return n;
 	}
 	@Override
 	public String printTree() {
-		StringBuilder result=new StringBuilder();
-		LinkedList<Node> queue=new LinkedList<>();
-		LinkedList<String> resultList=new LinkedList<>();
-		levelOrder(root, queue, resultList);
-		Iterator<String> it=resultList.iterator();
-		while(it.hasNext()){
-			result.append(it.next()+" ");
+		LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
+		
+		myQueue.offer(root);
+		
+		String returnString = "";
+		Node<Key,Value> temp;
+		int count = 0;
+		int level = 0;
+		
+		while (level <= height(root)) {
+			temp = myQueue.poll();
+			if (temp == null) {
+				returnString += " ";
+				myQueue.offer(null);
+				myQueue.offer(null);
+			}
+			else {
+				returnString += " " + temp.getKey().toString();
+				myQueue.offer(temp.getLeft());
+				myQueue.offer(temp.getRight());
+			}
+			count++;
+			if (count >= Math.pow(2, level)) {
+				level++;
+				count = 0;
+			}
 		}
-		return result.toString();
+		return returnString;
 	}
-	
-	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
-	 {
-	  Node<Key, Value> nullNode=null;
-	  
-	  if(root == null)return;
-	  if(queue.isEmpty())
-	  {
-	   resultList.add(root.getKey().toString());
-	  }
-	  else
-	  {if(queue.getFirst()==nullNode)
-		  resultList.add(" ");
-	   resultList.add(queue.getFirst().getKey().toString());
-	  }
-
-	  if(root.getLeft() != null)
-	  {
-	   queue.add(root.getLeft());
-	  }else if(root.getLeft() == null){
-		 queue.add(nullNode);
-	  }
-	  if(root.getRight() != null)
-	  {
-	   queue.add(root.getRight());
-	  }else if(root.getRight() == null){
-		 queue.add(nullNode);
-	  }
-	  levelOrder(root.getLeft(),queue, resultList);
-	  levelOrder(root.getRight(),queue,resultList);
-	 }
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub

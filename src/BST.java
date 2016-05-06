@@ -84,40 +84,57 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
 		return n;
 	} 
+	private int height(Node cur) {
+		  if(cur==null) {
+		   return -1;
+		  }
+		  if(cur.getLeft()==null && cur.getRight()==null) {
+		   return 0;
+		  } else if(cur.getLeft()==null) {
+		   return 1+height(cur.getRight());
+		  } else if(cur.getRight()==null) {
+		   return 1+height(cur.getLeft());
+		  } else {
+		   return 1+maximum(height(cur.getLeft()),height(cur.getRight()));
+		  }
+	}
+	private int maximum(int a, int b) {
+		  if(a>=b) {
+		   return a;
+		  } else {
+		   return b;
+		  }
+	}
 	@Override
 	public String printTree() {
-		StringBuilder result=new StringBuilder();
-		LinkedList<Node> queue=new LinkedList<>();
-		LinkedList<String> resultList=new LinkedList<>();
-		levelOrder(root, queue, resultList);
-		Iterator<String> it=resultList.iterator();
-		while(it.hasNext()){
-			result.append(it.next()+" ");
+		LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
+		
+		myQueue.offer(root);
+		
+		String returnString = "";
+		Node<Key,Value> temp;
+		int count = 0;
+		int level = 0;
+		
+		while (level <= height(root)) {
+			temp = myQueue.poll();
+			if (temp == null) {
+				returnString += " ";
+				myQueue.offer(null);
+				myQueue.offer(null);
+			}
+			else {
+				returnString +=" "+temp.getKey().toString();
+				myQueue.offer(temp.getLeft());
+				myQueue.offer(temp.getRight());
+			}
+			count++;
+			if (count >= Math.pow(2, level)) {
+				level++;
+				count = 0;
+			}
 		}
-		return result.toString();
+		return returnString.substring(1);
 	}
-	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
-	 {
-	  if(root == null)return;
 
-	  if(queue.isEmpty())
-	  {
-	   resultList.add(root.getKey().toString());
-	  }
-	  else
-	  {
-	   resultList.add(queue.getFirst().getKey().toString());
-	  }
-
-	  if(root.getLeft() != null)
-	  {
-	   queue.add(root.getLeft());
-	  }
-	  if(root.getRight() != null)
-	  {
-	   queue.add(root.getRight());
-	  }
-	  levelOrder(root.getLeft(),queue, resultList);
-	  levelOrder(root.getRight(),queue,resultList);
-	 }
 }

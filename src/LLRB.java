@@ -1,3 +1,4 @@
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -109,6 +110,7 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 	public void deleteMin() {
 		// TODO Auto-generated method stub
 		 root = deleteMin(root);
+		 if(root!=null)
 		 root.setColor(BLACK); }
 	
 	private Node deleteMin(Node h) {
@@ -164,16 +166,57 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 
 	@Override
 	public String printTree() {
-		StringBuilder result=new StringBuilder();
-		LinkedList<Node> queue=new LinkedList<>();
-		LinkedList<String> resultList=new LinkedList<>();
-		levelOrder(root, queue, resultList);
-		Iterator<String> it=resultList.iterator();
-		while(it.hasNext()){
-			result.append(it.next()+" ");
+		LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
+		
+		myQueue.offer(root);
+		
+		String returnString = "";
+		Node<Key,Value> temp;
+		int count = 0;
+		int level = 0;
+		
+		while (level <= height(root)) {
+			temp = myQueue.poll();
+			if (temp == null) {
+				returnString += " ";
+				myQueue.offer(null);
+				myQueue.offer(null);
+			}
+			else {
+				returnString +=" "+temp.getKey().toString();
+				myQueue.offer(temp.getLeft());
+				myQueue.offer(temp.getRight());
+			}
+			count++;
+			if (count >= Math.pow(2, level)) {
+				level++;
+				count = 0;
+			}
 		}
-		return result.toString();
+		return returnString.substring(1);
 	}
+	private int height(Node cur) {
+		  if(cur==null) {
+		   return -1;
+		  }
+		  if(cur.getLeft()==null && cur.getRight()==null) {
+		   return 0;
+		  } else if(cur.getLeft()==null) {
+		   return 1+height(cur.getRight());
+		  } else if(cur.getRight()==null) {
+		   return 1+height(cur.getLeft());
+		  } else {
+		   return 1+maximum(height(cur.getLeft()),height(cur.getRight()));
+		  }
+	}
+	private int maximum(int a, int b) {
+		  if(a>=b) {
+		   return a;
+		  } else {
+		   return b;
+		  }
+	}
+<<<<<<< HEAD
 	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
 	 {
 	  if(root == null)return;
@@ -200,9 +243,18 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 	 }
 
 
+=======
+	void colorFlip(Node h){
+		h.setColor(!h.getColor());
+		h.getLeft().setColor(h.getLeft().getColor());
+		h.getRight().setColor(h.getRight().getColor());
+		}
+	@Override
+>>>>>>> origin/master
 	public void reset() {
 		// TODO Auto-generated method stub
 		root=null;
 	}
 
 }
+

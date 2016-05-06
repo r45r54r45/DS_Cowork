@@ -12,12 +12,8 @@ public class Execute {
 		ReadFile reader = new ReadFile("input.txt");
 		writer = new WriteFile("output.txt");
 
-		//Execute.executeInstructions(new BST<Integer, String>(), reader.getCases());
-	//	Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
-
-	//	Execute.executeInstructions(new BST<Integer, String>(), reader.getCases());
-//		Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
-
+		Execute.executeInstructions(new BST<Integer, String>(), reader.getCases());
+		Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new RB<Integer, String>(), reader.getCases());
 		Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new Splay<Integer, String>(), reader.getCases());
@@ -40,7 +36,7 @@ public class Execute {
 				} else if (set.instruction.equals("m")) {
 					writer.write(object.get(object.min()).trim());
 				} else if (set.instruction.equals("P")) {
-					writer.write(object.printTree().trim());
+					writer.write(object.printTree());
 				} else if (set.instruction.equals("p")) {
 					object.put(Integer.parseInt(set.data1), set.data2);
 				} else if (set.instruction.equals("d")) {
@@ -51,7 +47,7 @@ public class Execute {
 			}
 			writer.write("\n");
 			if (TIME_CHECK) {
-				System.out.println(object.toString().split("@")[0] + "�쓽 "+i+"踰� 吏� 耳��씠�뒪�뿉�꽌 �냼�슂�맂 �떆媛�: " + (System.nanoTime() - time_start)+" ns");
+				System.out.println(object.toString().split("@")[0] + "'s "+i+" turn execute time: " + (System.nanoTime() - time_start)+" ns");
 			}
 			object.reset();
 		}
