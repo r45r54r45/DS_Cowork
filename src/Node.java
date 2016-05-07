@@ -1,7 +1,6 @@
-
 public class Node <Key extends Comparable<Key>, Value>{
-	 private static final boolean RED   = true; 
-	 private static final boolean BLACK = false;
+	private static final boolean RED   = true; 
+	private static final boolean BLACK = false;
 	 
 	private Key id;
 	private Value name;
@@ -9,6 +8,11 @@ public class Node <Key extends Comparable<Key>, Value>{
 	private int subTreeSize;
 	private Node<Key, Value> left, right, parent;
 	private boolean color;
+	private boolean isDeleted = false;
+	public Node(Key k,Node<Key,Value> parent){
+		this.id=k;
+		this.parent=parent;
+	}
 	public Node(Key k) {
 		  left = right = parent = null;
 		  balance = 0;
@@ -30,6 +34,8 @@ public class Node <Key extends Comparable<Key>, Value>{
 		this.left=null;
 		this.right=null;
 	} 
+	public boolean isDeleted(){return isDeleted;}
+    public void setDeleted(boolean isDeleted){this.isDeleted = isDeleted;}
 	public boolean getColor(){return color;}
 	public void setColor(boolean c){this.color = c;}
 	public Key getKey(){return id;}
@@ -39,7 +45,6 @@ public class Node <Key extends Comparable<Key>, Value>{
 	public Node<Key, Value> getLeft(){return left;}
 	public Node<Key, Value> getRight() {return right;}
 	public Node<Key, Value> getParent() {return parent;}
-	
 	public void setLeft(Node<Key, Value> newLeft) {
 		this.left = newLeft;
 	}
@@ -59,7 +64,6 @@ public class Node <Key extends Comparable<Key>, Value>{
 		this.subTreeSize = newSubTreeSize;
 	}
 	public void setBalance(int bal) {
-		// TODO Auto-generated method stub
 		this.balance=bal;
 	}
 }
