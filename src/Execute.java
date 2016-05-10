@@ -9,13 +9,13 @@ public class Execute {
 	private static WriteFile writer;
 
 	public static void main(String[] args) {
-		ReadFile reader = new ReadFile("input.txt");
+		ReadFile reader = new ReadFile("input_sample.txt");
 		writer = new WriteFile("output.txt");
-
+		System.out.println("Process Start");
 		Execute.executeInstructions(new BST<Integer, String>(), reader.getCases());
 		Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new RB<Integer, String>(), reader.getCases());
-		Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
+//		Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new Splay<Integer, String>(), reader.getCases());
 	}
  
@@ -25,6 +25,7 @@ public class Execute {
 			LinkedList<ReadFile.InstructionSet> instructionList=arrayList.get(i);
 			if (TIME_CHECK) {
 				time_start = System.nanoTime();
+				System.out.println("Start time: "+time_start);
 			}
 			Iterator<ReadFile.InstructionSet> it = instructionList.iterator();
 			while (it.hasNext()) {
