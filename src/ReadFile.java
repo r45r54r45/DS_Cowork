@@ -52,7 +52,6 @@ public class ReadFile {
 			} 
 			caseList.add(dataInCase);
 		}
-		System.out.println("File Read Finish");
 		}catch(IOException e){
 			e.printStackTrace();
 		}

@@ -17,12 +17,10 @@ public class WriteFile {
 	public void writeFile(){
 		
 		try{
-			System.out.println("<- File Write Start ->");
 			fw=new FileWriter(path,true);
 			fw.write(sb.toString());
 			fw.close();
 			sb=new StringBuilder();
-			System.out.println("<- File Write End ->");
 		}catch(IOException e){
 			e.printStackTrace();
 		}		 
