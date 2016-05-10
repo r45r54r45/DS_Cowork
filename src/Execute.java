@@ -49,7 +49,7 @@ public class Execute {
 					writer.write(object.get(object.min()).trim());
 				} else if (set.instruction.equals("P")) {
 					inst=2;
-					writer.write(object.printTree());
+//					writer.write(object.printTree());
 				} else if (set.instruction.equals("p")) {
 					inst=3;
 					object.put(Integer.parseInt(set.data1), set.data2);
@@ -98,7 +98,7 @@ public class Execute {
 					inst="DELETEMIN ";
 					break;
 				}
-				System.out.println("| "+inst+" | "+inst_total_time[i]/inst_call[i]+" ns");
+				System.out.println("| "+inst+" | "+String.format("%6d", inst_total_time[i]/inst_call[i])+" ns");
 			}	
 			System.out.println("----------------------------------------------- \n");
 			
