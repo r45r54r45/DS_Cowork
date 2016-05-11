@@ -9,12 +9,12 @@ public class Execute {
 	private static WriteFile writer;
 
 	public static void main(String[] args) {
-		ReadFile reader = new ReadFile("input_sample.txt");
+		ReadFile reader = new ReadFile("input.txt");
 		writer = new WriteFile("output.txt");
 		Execute.executeInstructions(new BST<Integer, String>(), reader.getCases());
-//		Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
+		Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new RB<Integer, String>(), reader.getCases());
-//		Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
+		Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new Splay<Integer, String>(), reader.getCases());
 	}
  
