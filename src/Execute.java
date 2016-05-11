@@ -9,10 +9,10 @@ public class Execute {
 	private static WriteFile writer;
 
 	public static void main(String[] args) {
-		ReadFile reader = new ReadFile("input.txt");
+		ReadFile reader = new ReadFile("input_sample.txt");
 		writer = new WriteFile("output.txt");
 		Execute.executeInstructions(new BST<Integer, String>(), reader.getCases());
-		Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
+//		Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new RB<Integer, String>(), reader.getCases());
 		Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new Splay<Integer, String>(), reader.getCases());
@@ -25,6 +25,9 @@ public class Execute {
 		long[] inst_total_time=new long[6];
 		long[] inst_avr_time=new long[6];
 		long[] inst_call=new long[6];
+		System.out.println("----------------------------------------------- ");
+		System.out.println("| "+object.toString().split("@")[0]+"'s statistic");
+		System.out.println("----------------------------------------------- ");
 		for (int i = 0; i < TEST_CASES_NUM; i++) {
 			LinkedList<ReadFile.InstructionSet> instructionList=arrayList.get(i);
 			if (TIME_CHECK) {
@@ -67,14 +70,12 @@ public class Execute {
 			}
 			writer.write("\n");
 			if (TIME_CHECK) {
-				System.out.println(object.toString().split("@")[0] + "'s "+i+" turn execute time: " + (System.nanoTime() - time_start)+" ns");
+				System.out.println("| "+object.toString().split("@")[0] + "'s "+i+" turn execute time: " + (System.nanoTime() - time_start)+" ns");
 			}
 			writer.writeFile();
 			object.reset();
 		}
 		if (TIME_CHECK) {
-			System.out.println("----------------------------------------------- ");
-			System.out.println("| "+object.toString().split("@")[0]+"'s statistic");
 			System.out.println("----------------------------------------------- ");
 			for(int i=0; i<6; i++){
 				String inst="";
@@ -102,7 +103,7 @@ public class Execute {
 			}	
 			System.out.println("----------------------------------------------- \n");
 			
-			System.out.println("Total instruction count: "+inst_count);
+//			System.out.println("Total instruction count: "+inst_count);
 		}
 	}
 }
