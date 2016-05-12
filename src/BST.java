@@ -110,8 +110,7 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 		LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
 		
 		myQueue.offer(root);
-		
-		String returnString = "";
+		StringBuilder sb=new StringBuilder();
 		Node<Key,Value> temp;
 		int count = 0;
 		int level = 0;
@@ -119,12 +118,12 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 		while (level <= height(root)) {
 			temp = myQueue.poll();
 			if (temp == null) {
-				returnString += " ";
+				sb.append(" ");
 				myQueue.offer(null);
 				myQueue.offer(null);
 			}
 			else {
-				returnString +=" "+temp.getKey().toString();
+				sb.append(" "+temp.getKey().toString());
 				myQueue.offer(temp.getLeft());
 				myQueue.offer(temp.getRight());
 			}
@@ -134,7 +133,7 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 				count = 0;
 			}
 		}
-		return returnString.substring(1);
+		return sb.toString().substring(1);
 	}
 
 }

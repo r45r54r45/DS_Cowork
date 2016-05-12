@@ -25,22 +25,29 @@ public class ReadFile {
 		br=new BufferedReader(fr);
 		String line;
 		while((line=br.readLine())!=null){
-			StringTokenizer st=new StringTokenizer(line, " ");
+//			StringTokenizer st=new StringTokenizer(line, " ");
+			//HACK 
+			//has problem of not detecting consequent white spaces
+			String st[]=line.split(" ");
 			dataInCase=new LinkedList<>();
-			while(st.hasMoreTokens()){
-				String temp=st.nextToken().trim();
+			int i=-1;
+			while(i<st.length-1){
+				i++;
+				String temp=st[i].trim();
 				if(temp.equals("g")){
-					dataInCase.add(new InstructionSet(temp, st.nextToken()));
+					dataInCase.add(new InstructionSet(temp, st[++i]));
 				}else if(temp.equals("p")){
-					dataInCase.add(new InstructionSet(temp, st.nextToken() , st.nextToken()));
+					dataInCase.add(new InstructionSet(temp, st[++i] , st[++i]));
 				}else if(temp.equals("d")){
-					dataInCase.add(new InstructionSet(temp, st.nextToken()));
+					dataInCase.add(new InstructionSet(temp, st[++i]));
 				}else if(temp.equals("m")){
 					dataInCase.add(new InstructionSet(temp, null));
 				}else if(temp.equals("D")){
 					dataInCase.add(new InstructionSet(temp, null));
 				}else if(temp.equals("P")){
 					dataInCase.add(new InstructionSet(temp, null));
+				}else{
+					System.out.println("WTF? :  "+temp);
 				}
 			} 
 			caseList.add(dataInCase);

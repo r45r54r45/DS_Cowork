@@ -78,11 +78,14 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 		return x;
 		}
 	
+<<<<<<< HEAD
 	public void colorFlip(Node h){
 		h.setColor(!h.getColor());
 		h.getLeft().setColor(h.getLeft().getColor());
 		h.getRight().setColor(h.getRight().getColor());
 		}
+=======
+>>>>>>> origin/master
 
 	public boolean isEmpty(){return (size()==0);}
 
@@ -218,6 +221,7 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 		   return b;
 		  }
 	}
+<<<<<<< HEAD
 
 	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
 	 {
@@ -248,6 +252,15 @@ public class LLRB <Key extends Comparable<Key>, Value> implements CommonMethod<K
 
 	@Override
 
+=======
+
+	void colorFlip(Node h){
+		h.setColor(!h.getColor());
+		h.getLeft().setColor(h.getLeft().getColor());
+		h.getRight().setColor(h.getRight().getColor());
+		}
+	@Override
+>>>>>>> origin/master
 	public void reset() {
 		// TODO Auto-generated method stub
 		root=null;
