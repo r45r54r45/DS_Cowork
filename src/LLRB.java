@@ -30,13 +30,13 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	
 	public Value get(Key k) {
 		test("get1");
-		if (root != null) return null;
-		return get(root,k);
+		if (root == null) {test("줄게 없어여!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1트리비어있음"); return null;}
+		else return get(root,k);
 	}
 	private Value get(Node n, Key k){
 		test("get2");
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>" + n.getValue());
-		if(n==null)return null;
+		//System.out.println(">>>>>>>>>>>>>>>>>>>>>" + n.getValue());
+		if(n==null) {test("줄게 없어여!!!!!!!!!!!!!!!!!!!!!!!!!!!");return null;} 
 		int t=n.getKey().compareTo(k);
 		if(t>0)return get(n.getLeft(),k);
 		else if(t<0)return get(n.getRight(),k);
@@ -54,7 +54,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	public Node put(Node h, Key k, Value v) {
 		test("put2");
 		// TODO Auto-generated method stub
-		   if (h == null) return (new Node<Key, Value>(k, v,1));
+		   if (h == null) return (new Node<Key, Value>(k, v,1)); //없다고 null 주면 잣됨
 	       int cmp = k.compareTo((Key)h.getKey());
 	       if(cmp<0)  h.setLeft(put(h.getLeft(), k, v));
 	       else if (cmp>0) h.setRight(put(h.getRight(), k, v));
@@ -65,6 +65,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	       if (isRed(h.getLeft()) && isRed(h.getRight())) colorFlip(h);
 	       
 	       h.setSubTreeSize(1+size(h.getLeft())+size(h.getRight()));
+			//if (h!= null)System.out.println(">>>>>>>>>putputput>>>>>>>>>>>>" + h.getValue());
 	       return h;   
 	       } 
 	
@@ -92,8 +93,8 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	public void colorFlip(Node h){
 		test("colorFlip");
 		h.setColor(!h.getColor());
-		h.getLeft().setColor(h.getLeft().getColor());
-		h.getRight().setColor(h.getRight().getColor());
+		if (h.getLeft() != null) h.getLeft().setColor(h.getLeft().getColor());
+		if (h.getRight() != null)h.getRight().setColor(h.getRight().getColor());
 		}
 
 
@@ -101,9 +102,10 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 
 	@Override
 	public Key min() {
-		test("min1");
+		test("first min1");
 		// TODO Auto-generated method stub
 		if (isEmpty()) return null;
+		else System.out.println( "key >>>>>>>>>>>>>>>>>>"+(Key)min(root).getKey());
 		return (Key)min(root).getKey();
 	}
 	
@@ -126,13 +128,16 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	public void deleteMin() {
 		test("deleteMin1");
 		// TODO Auto-generated method stub
-		 root = deleteMin(root);
-		 if(root!=null)
-		 root.setColor(BLACK); }
+		if(root!=null) root = deleteMin(root);
+		if(root!=null) root.setColor(BLACK); 
+	}
 	
 	private Node deleteMin(Node h) {
 		test("deleteMin2");
-		if (h.getLeft() == null) return null;
+		if (h.getLeft() == null) {
+			h = null;
+			return h;
+		}
 		if (!isRed(h.getLeft()) && !isRed(h.getLeft().getLeft()))
 			h = moveRedLeft(h);
 	    h.setLeft(deleteMin(h.getLeft()));
@@ -141,41 +146,48 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	
 	private Node moveRedLeft(Node h){
 		test("moveRedLeft");
+		if (h==null) return h;
 		colorFlip(h);
-		if (isRed(h.getRight().getLeft()))
+		if (h.getRight() != null) {if (isRed(h.getRight().getLeft()))
 			{h.setRight(rotateRight(h.getRight()));
 			h = rotateLeft(h);
 			colorFlip(h);
-			}
+			}}
 		return h;   }
 	
 	private Node moveRedRight(Node h){
 		test("moveRedRight");
+		if (h == null) return h;
 		colorFlip(h);
-		if (isRed(h.getLeft().getLeft())){
+
+		if (h.getLeft() != null) {if (isRed(h.getLeft().getLeft())){
 			h = rotateRight(h);
 			colorFlip(h);
-			}      
+			}      }
 		return h;
 		}
 	
 	public void delete(Key k){
 		test("delete1");
-		root = delete(root, k);
-		root.setColor(BLACK);
+		if(root == null) System.out.println("딜릿 할게 없음");
+		else root = delete(root, k);
+		if(root == null) System.out.println("딜릿 할게 없음");
+		else root.setColor(BLACK);
 		}
 	
 	private Node delete(Node h, Key k){
 		test("delete2");
+		if (h == null) return null;
 		if (k.compareTo((Key)h.getKey()) < 0){              
-			if (!isRed(h.getLeft()) && !isRed(h.getLeft().getLeft()))
+			if (h.getLeft() != null){if (!isRed(h.getLeft()) && !isRed(h.getLeft().getLeft()))
 				h = moveRedLeft(h);
 			h.setLeft(delete(h.getLeft(), k));
-			}
+			}}
 		else{
 			if (isRed(h.getLeft()))   h = rotateRight(h);               
 			if (k.compareTo((Key)h.getKey()) == 0 && (h.getRight() == null))  return null;               
-			if (!isRed(h.getRight()) && !isRed(h.getRight().getLeft())) h = moveRedRight(h);               
+			if (h.getRight() != null){if (!isRed(h.getRight()) && !isRed(h.getRight().getLeft())) h = moveRedRight(h);}   
+			// 현재 레드노드가 정답이 거나 작은데, 오른쪽에 노드는 무조건 있음. 
 			if (k.compareTo((Key)h.getKey()) == 0) {
 				h.setName(get(h.getRight(), (Key)min(h.getRight()).getKey()));
 				h.setId(min(h.getRight()).getKey());
