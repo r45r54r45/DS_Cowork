@@ -11,18 +11,10 @@ public class Execute {
 	public static void main(String[] args) {
 		ReadFile reader = new ReadFile("input_sample.txt");
 		writer = new WriteFile("output.txt");
-<<<<<<< HEAD
-
 //		Execute.executeInstructions(new BST<Integer, String>(), reader.getCases());
 // 	Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
-    	Execute.executeInstructions(new RB<Integer, String>(), reader.getCases());
-	//	Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
-=======
-		Execute.executeInstructions(new BST<Integer, String>(), reader.getCases());
-//		Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
-//		Execute.executeInstructions(new RB<Integer, String>(), reader.getCases());
-		Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
->>>>>>> origin/master
+    //	Execute.executeInstructions(new RB<Integer, String>(), reader.getCases());
+	Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new Splay<Integer, String>(), reader.getCases());
 	}
  
