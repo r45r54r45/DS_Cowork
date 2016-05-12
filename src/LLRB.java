@@ -20,16 +20,22 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 		}
 	
 	public LLRB(){
+		testFlag = true;
 		root=null;
 	}
 	public LLRB(Key k,Value v){
+		testFlag = true;
 		root=new Node<Key, Value>(k,v,1);
 	}
 	
 	public Value get(Key k) {
+		test("get1");
+		if (root != null) return null;
 		return get(root,k);
 	}
 	private Value get(Node n, Key k){
+		test("get2");
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>" + n.getValue());
 		if(n==null)return null;
 		int t=n.getKey().compareTo(k);
 		if(t>0)return get(n.getLeft(),k);
@@ -39,12 +45,14 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 
 	@Override
 	public void put(Key k, Value v) {
+		test("put1");
 		// TODO Auto-generated method stub
 		root = put((Node)root, (Key)k, (Value)v);
 		root.setColor(BLACK);
 	} 
 	
 	public Node put(Node h, Key k, Value v) {
+		test("put2");
 		// TODO Auto-generated method stub
 		   if (h == null) return (new Node<Key, Value>(k, v,1));
 	       int cmp = k.compareTo((Key)h.getKey());
@@ -61,6 +69,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	       } 
 	
 	public Node rotateLeft(Node h){
+		test("rotateLeft");
 	Node x = h.getRight();
 	h.setRight(x.getLeft());
 	x.setLeft(h);
@@ -70,6 +79,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	}
 	
 	public Node rotateRight(Node h) {
+		test("rotateRight");
 		Node x = h.getLeft();
 		h.setLeft(x.getRight());
 		x.setRight(h);
@@ -80,6 +90,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	
 
 	public void colorFlip(Node h){
+		test("colorFlip");
 		h.setColor(!h.getColor());
 		h.getLeft().setColor(h.getLeft().getColor());
 		h.getRight().setColor(h.getRight().getColor());
@@ -90,17 +101,20 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 
 	@Override
 	public Key min() {
+		test("min1");
 		// TODO Auto-generated method stub
 		if (isEmpty()) return null;
 		return (Key)min(root).getKey();
 	}
 	
 	private Node min(Node n){
+		test("min2");
 		if (n.getLeft()==null) return n;
 		return min(n.getLeft());
 	}
 	
 	private Node fixUp(Node n){
+		test("fixUp");
 		if(isRed(n.getRight())) n = rotateLeft(n);
 		if(isRed(n.getLeft()) && isRed(n.getLeft().getLeft())) n = rotateRight(n);
 		if(isRed(n.getLeft()) && isRed(n.getRight())) colorFlip(n);
@@ -110,12 +124,14 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 
 	@Override
 	public void deleteMin() {
+		test("deleteMin1");
 		// TODO Auto-generated method stub
 		 root = deleteMin(root);
 		 if(root!=null)
 		 root.setColor(BLACK); }
 	
 	private Node deleteMin(Node h) {
+		test("deleteMin2");
 		if (h.getLeft() == null) return null;
 		if (!isRed(h.getLeft()) && !isRed(h.getLeft().getLeft()))
 			h = moveRedLeft(h);
@@ -124,6 +140,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	}
 	
 	private Node moveRedLeft(Node h){
+		test("moveRedLeft");
 		colorFlip(h);
 		if (isRed(h.getRight().getLeft()))
 			{h.setRight(rotateRight(h.getRight()));
@@ -133,6 +150,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 		return h;   }
 	
 	private Node moveRedRight(Node h){
+		test("moveRedRight");
 		colorFlip(h);
 		if (isRed(h.getLeft().getLeft())){
 			h = rotateRight(h);
@@ -142,11 +160,13 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 		}
 	
 	public void delete(Key k){
+		test("delete1");
 		root = delete(root, k);
 		root.setColor(BLACK);
 		}
 	
 	private Node delete(Node h, Key k){
+		test("delete2");
 		if (k.compareTo((Key)h.getKey()) < 0){              
 			if (!isRed(h.getLeft()) && !isRed(h.getLeft().getLeft()))
 				h = moveRedLeft(h);
