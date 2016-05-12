@@ -1,126 +1,62 @@
 import java.util.LinkedList;
 
+
 public class Splay <Key extends Comparable<Key>, Value> extends Testing implements CommonMethod<Key, Value> {
 	private Node<Key, Value> root;
 	
 	public Splay() { }
 	
 	public int size(){return size(root);}
-	public int size(Node<Key, Value> n){
-		if(n==null)return 0;
-		else return n.getSubTreeSize();
-	}
+	private int size(Node x) {
+        if (x == null) return 0;
+        else return 1 + size(x.getLeft()) + size(x.getRight());
+    }
 	public boolean isEmpty(){return (size()==0);}
-    private void splay(Node node) {
-        while (node.getParent()!=null) {
-            Node parent = node.getParent();
-            if (parent.getParent()==null) {
-                if (parent.getLeft() == node) {
-                    rotateRight(parent);
-                } else {
-                    rotateLeft(parent);
-                }
-            } else {
-                Node gparent = parent.getParent();
-                if (parent.getLeft() == node && gparent.getLeft() == parent) {
-                    rotateRight(gparent);
-                    rotateRight(node.getParent());
-                } else if (parent.getRight() == node &&
-                        gparent.getRight() == parent) {
-                    rotateLeft(gparent);
-                    rotateLeft(node.getParent());
-                } else if (parent.getLeft() == node &&
-                        gparent.getRight() == parent) {
-                    rotateRight(parent);
-                    rotateLeft(node.getParent());
-                } else {
-                    rotateLeft(parent);
-                    rotateRight(node.getParent());
-                }
-            }
-        }
+	public boolean contains(Key key) {
+        return get(key) != null;
     }
-    
-    private void rotateLeft(Node x) {
-        Node y = x.getRight();
-        x.setRight(y.getLeft());
-        if (y.getLeft() != null) {
-            y.getLeft().setParent(x);
-        }
-        y.setParent(x.getParent());
-        if (x.getParent() == null) {
-            root = y;
-        } else {
-            if (x == x.getParent().getLeft()) {
-                x.getParent().setLeft(y);
-            } else {
-                x.getParent().setRight(y);
-            }
-        }
-        y.setLeft(x);
-        x.setParent(y);
-    }
-
-    private void rotateRight(Node x) {
-        Node y = x.getLeft();
-        x.setLeft(y.getRight());
-        if (y.getRight() != null) {
-            y.getRight().setParent(x);
-        }
-        y.setParent(x.getParent());
-        if (x.getParent() == null) {
-            root = y;
-        } else {
-            if (x == x.getParent().getLeft()) {
-                x.getParent().setLeft(y);
-            } else {
-                x.getParent().setRight(y);
-            }
-        }
-        y.setRight(x);
-        x.setParent(y);
-    }
-    
-	
-	
 	@Override
-	public Value get(Key k) {
-		return get(root,k);
-	}
-	private Value get(Node n, Key k){
-		if(n==null)return null;
-		int t=n.getKey().compareTo(k);
-		if(t>0)return get(n.getLeft(),k);
-		else if(t<0)return get(n.getRight(),k);
-		else return (Value)n.getValue();
-	}
-
+	public Value get(Key key) {
+        root = splay(root, key);
+        int cmp = key.compareTo(root.getKey());
+        if (cmp == 0) return root.getValue();
+        else          return null;
+    }    
 	@Override
-	public void put(Key k, Value v) {
-		// TODO Auto-generated method stub
-		root=put(root,k,v);	
-		search(k);
-	}
-	private Node put(Node n,Key k,Value v) {
-		if(n==null)return new Node<Key,Value>(k,v,1);
-		int t=n.getKey().compareTo(k);
-		if(t>0){
-				n.setLeft(put(n.getLeft(),k,v));
-		}else if(t<0){
-				n.setRight(put(n.getRight(),k,v));
-		}else n.setName(v);
-		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
-		return n;
-    }
-	
-	public boolean search(Key key) {
+	public void put(Key key, Value value) {
+        // splay key to root
         if (root == null) {
-            return false;
+            root = new Node(key, value);
+            return;
+        }
+        
+        root = splay(root, key);
+
+        int cmp = key.compareTo(root.getKey());
+        
+        // Insert new node at root
+        if (cmp < 0) {
+            Node n = new Node(key, value);
+            n.setLeft(root.getLeft());
+            n.setRight(root);
+            root.setLeft(null);
+            root = n;
         }
 
-        Node node = search(key, root);
-        splay(node);
-        return node != null;
+        // Insert new node at root
+        else if (cmp > 0) {
+            Node n = new Node(key, value);
+            n.setRight(root.getRight());
+            n.setLeft(root);
+            root.setRight(null);
+            root = n;
+        }
+
+        // It was a duplicate key. Simply replace the value
+        else if (cmp == 0) {
+            root.setName(value);
+        }
+
     }
 
     private Node search(Key key, Node node) {
@@ -174,36 +110,96 @@ public class Splay <Key extends Comparable<Key>, Value> extends Testing implemen
 
 	@Override
 	public void delete(Key key) {
-        if (root == null) {
-            return;
+        if (root == null) return; // empty tree
+        
+        root = splay(root, key);
+
+        int cmp = key.compareTo(root.getKey());
+        
+        if (cmp == 0) {
+            if (root.getLeft() == null) {
+                root = root.getRight();
+            } 
+            else {
+                Node x = root.getRight();
+                root = root.getLeft();
+                splay(root, key);
+                root.setRight(x);
+            }
         }
 
-        search(key);
-        delete(key, root);
+        // else: it wasn't in the tree to remove
+    }
+	private Node splay(Node h, Key key) {
+        if (h == null) return null;
+
+        int cmp1 = key.compareTo((Key)h.getKey());
+
+        if (cmp1 < 0) {
+            // key not in tree, so we're done
+            if (h.getLeft() == null) {
+                return h;
+            }
+            int cmp2 = key.compareTo((Key)h.getLeft().getKey());
+            if (cmp2 < 0) {
+                h.getLeft().setLeft(splay(h.getLeft().getLeft(), key));
+                h = rotateRight(h);
+            }
+            else if (cmp2 > 0) {
+                h.getLeft().setRight(splay(h.getLeft().getRight(), key));
+                if (h.getLeft().getRight() != null)
+                    h.setLeft(rotateLeft(h.getLeft()));
+            }
+            
+            if (h.getLeft() == null) return h;
+            else                return rotateRight(h);
+        }
+
+        else if (cmp1 > 0) { 
+            // key not in tree, so we're done
+            if (h.getRight() == null) {
+                return h;
+            }
+
+            int cmp2 = key.compareTo((Key)h.getRight().getKey());
+            if (cmp2 < 0) {
+                h.getRight().setLeft(splay(h.getRight().getLeft(), key));
+                if (h.getRight().getLeft() != null)
+                    h.setRight(rotateRight(h.getRight()));
+            }
+            else if (cmp2 > 0) {
+                h.getRight().setRight(splay(h.getRight().getRight(), key));
+                h = rotateLeft(h);
+            }
+            
+            if (h.getRight() == null) return h;
+            else                 return rotateLeft(h);
+        }
+
+        else return h;
+    }
+	public int height() { return height(root); }
+    private int height(Node x) {
+        if (x == null) return -1;
+        return 1 + Math.max(height(x.getLeft()), height(x.getRight()));
     }
 
-    private void delete(Key k, Node n) {
-    	int t=n.getKey().compareTo(k);
-        if (t> 0) {
-            if (n.getLeft()!=null) {
-                delete(k, n.getLeft());
-            }
-            if (n.getLeft().isDeleted()) {
-                n.setLeft(null);
-            }
-            return;
-        }
-        if (t< 0) {
-            if (n.getRight()!=null) {
-                delete(k, n.getRight());
-            }
-            if (n.getRight().isDeleted()) {
-                n.setRight(null);
-            }
-            return;
-        }
+    
+    
+    // right rotate
+    private Node rotateRight(Node h) {
+        Node x = h.getLeft();
+        h.setLeft(x.getRight());
+        x.setRight(h);
+        return x;
+    }
 
-        delete(n);
+    // left rotate
+    private Node rotateLeft(Node h) {
+        Node x = h.getRight();
+        h.setRight(x.getLeft());
+        x.setLeft(h);
+        return x;
     }
 
     private void delete(Node n) {
@@ -240,21 +236,6 @@ public class Splay <Key extends Comparable<Key>, Value> extends Testing implemen
         Key min = findMin(n.getRight());
         n.setId(min);
     }
-
-    private int height(Node cur) {
-		  if(cur==null) {
-		   return -1;
-		  }
-		  if(cur.getLeft()==null && cur.getRight()==null) {
-		   return 0;
-		  } else if(cur.getLeft()==null) {
-		   return 1+height(cur.getRight());
-		  } else if(cur.getRight()==null) {
-		   return 1+height(cur.getLeft());
-		  } else {
-		   return 1+maximum(height(cur.getLeft()),height(cur.getRight()));
-		  }
-	}
 	private int maximum(int a, int b) {
 		  if(a>=b) {
 		   return a;
@@ -267,6 +248,7 @@ public class Splay <Key extends Comparable<Key>, Value> extends Testing implemen
 		LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
 		
 		myQueue.offer(root);
+		
 		
 		String returnString = "";
 		Node<Key,Value> temp;
