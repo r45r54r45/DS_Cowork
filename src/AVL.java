@@ -1,7 +1,6 @@
-import java.util.Iterator;
 import java.util.LinkedList;
 
-public class AVL <Key extends Comparable<Key>, Value> extends Testing implements CommonMethod<Key, Value> {
+public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Key, Value> {
 	private Node<Key, Value> root;
 	
 	public AVL(){
@@ -21,6 +20,7 @@ public class AVL <Key extends Comparable<Key>, Value> extends Testing implements
 	public boolean contains(Key k){return get(k)!=null;}
 	
 	
+	
 	@Override
 	public Value get(Key k) {
 		return get(root,k);
@@ -37,7 +37,6 @@ public class AVL <Key extends Comparable<Key>, Value> extends Testing implements
 	public void put(Key k, Value v) {
 		// TODO Auto-generated method stub
 		root=put(root,k,v);	
-		//System.out.print(get(k)+" ");
 	}
 	private Node put(Node n, Key k, Value v){
 		if(n==null)return new Node<Key,Value>(k,v,1);
@@ -50,84 +49,108 @@ public class AVL <Key extends Comparable<Key>, Value> extends Testing implements
 		}
 		else n.setName(v);
 		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
-		recursiveBalance(n);
+		recursivebalance(n);
 		return n;
-	}
-	public void recursiveBalance(Node cur) {
-		  Balance(cur);
-		  int balance = cur.getBalance();
-		  if(balance==2){//LL or LR
-			   if(height(cur.getLeft().getLeft())>=height(cur.getLeft().getRight())) {//LL
-			    cur = rotateLeft(cur);
-			   } else {//LR
-			    cur = doubleRotateLeftRight(cur);
-			   }
-		  }else if(balance==-2){//RR or RL
-			   if(height(cur.getRight().getRight())>=height(cur.getRight().getLeft())) {//RR
-				    cur = rotateRight(cur);
-			   } else {//RL
-				    cur = doubleRotateRightLeft(cur);
-			   }
-		  }
-		  if(cur.getParent()!=null){
-			   recursiveBalance(cur.getParent());
-		  }else {
-		   this.root = cur;
-		  }
-	}
-	 public Node rotateRight(Node n) {
-		  Node v = n.getRight();
-		  if(n.getParent()!=null)
-			  v.setParent(n.getParent());
-		  n.setRight(v.getLeft());
-		  if(n.getRight()!=null) {
-		   n.getRight().setParent(n);
-		  }
-		  v.setLeft(n);
-		  n.setParent(v);
-		  if(v.getParent()!=null) {
-		   if(v.getParent().getRight()==n) {
-		    v.getParent().setRight(v);
-		   } else if(v.getParent().getLeft()==n) {
-		    v.getParent().setLeft(v);
-		   }
-		  }
-		  Balance(n);
-		  Balance(v);
-		  return v;
-	}
-	public Node rotateLeft(Node n) {
-		  Node v = n.getLeft();
-		  if(n.getParent()!=null)
-			  v.setParent(n.getParent());
-		  n.setLeft(v.getRight());
-		  if(n.getLeft()!=null) {
-		   n.getLeft().setParent(n);
-		  }
-		  v.setRight(n);
-		  n.setParent(v);
-		  if(v.getParent()!=null) {
-		   if(v.getParent().getRight()==n) {
-		    v.getParent().setRight(v);
-		   } else if(v.getParent().getLeft()==n) {
-		    v.getParent().setLeft(v);
-		   }
-		  }
-		  Balance(n);
-		  Balance(v);
-		  return v;
-	}
-	public Node doubleRotateLeftRight(Node u) {
-		  u.setLeft(rotateRight(u.getLeft()));
-		  return rotateLeft(u);
-	}
-	public Node doubleRotateRightLeft(Node u) {
-		  u.setRight(rotateLeft(u.getRight()));
-		  return rotateRight(u);
 	}
 	private void Balance(Node cur) {
 		  int bal = height(cur.getLeft())-height(cur.getRight());
 		  cur.setBalance(bal);
+	}
+	
+	@Override
+	public Key min(){//m
+		if(isEmpty())return null;
+		return (Key)min(root).getKey();
+	}
+	private Node min(Node n){
+		if(n.getLeft()==null)return n;
+		return min(n.getLeft());
+	}
+	@Override
+	public void deleteMin() {//D
+		if(!isEmpty())root=deleteMin(root);	
+	}
+	private Node deleteMin(Node n){
+		if(n.getLeft()==null)return n.getRight();
+		n.setLeft(deleteMin(n.getLeft()));
+		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
+		recursivebalance(n); 
+		return n;
+	}	
+	public int balance(Node root){
+		int right, left;			
+		if (root.getLeft() == null){ left = 0;}
+		else {left = height(root.getLeft());}
+		if (root.getRight() == null){right = 0;}
+		else {right = height(root.getRight());}			
+		return left - right;
+	}
+	public Node recursivebalance(Node x){
+		if(balance(x) > 1 ){
+				if (x.getLeft().getLeft() == null) return this.rotateLR(x);
+				if (x.getLeft().getRight() == null) return this.rotateLL(x);
+				if (height(x.getLeft().getLeft()) > height(x.getLeft().getRight()) ) return this.rotateLL(x);
+				else return this.rotateRL(x);
+		}
+		if(balance(x) < -1){
+			if (x.getRight().getRight() == null) return this.rotateRL(x);
+			if (x.getRight().getLeft() == null)	return this.rotateRR(x);
+			if (height(x.getRight().getLeft()) >height(x.getRight().getRight())) return this.rotateLR(x);
+			else return this.rotateRR(x);
+		}
+		return x;
+	}
+	public Node rotateLL(Node old){
+		Node newNode = old.getLeft();
+		old.setLeft(newNode.getRight());
+		newNode.setRight(old);
+		balance(old);
+		balance(newNode);
+		return newNode;
+	}
+	public Node rotateRR(Node old){
+		Node newNode = old.getRight();
+	
+		old.setRight(newNode.getLeft());
+		newNode.setLeft(old);
+		balance(old);
+		balance(newNode);
+		return newNode;
+	}
+	public Node rotateLR(Node old){
+		old.setLeft(this.rotateRR(old.getLeft()));
+		return rotateLL(old);
+	}
+	
+	public Node rotateRL(Node old){
+		old.setRight(rotateLL(old.getRight()));
+		return rotateRR(old);
+	}
+
+	@Override
+	public void delete(Key k) {
+		root=delete(root,k);
+	}
+	private Node delete(Node n, Key k){
+		if(n==null)return null;
+		int t=n.getKey().compareTo(k);
+		if(t>0){
+			n.setLeft(delete(n.getLeft(),k));
+		}
+		else if(t<0){
+			n.setRight(delete(n.getRight(),k));
+		}
+		else{
+			if(n.getLeft()==null)return n.getRight();
+			if(n.getRight()==null)return n.getLeft();
+			Node target=n;
+			n=min(target.getRight());
+			n.setRight(deleteMin(target.getRight()));
+			n.setLeft(target.getLeft());
+		}
+		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
+		recursivebalance(n);
+		return n;
 	}
 	private int height(Node cur) {
 		  if(cur==null) {
@@ -151,87 +174,11 @@ public class AVL <Key extends Comparable<Key>, Value> extends Testing implements
 		  }
 	}
 	@Override
-	public Key min(){//m
-		if(isEmpty())return null;
-		return (Key)min(root).getKey();
-	}
-	private Node min(Node n){
-		if(n.getLeft()==null)return n;
-		return min(n.getLeft());
-	}
-	@Override
-	public void deleteMin() {//D
-		if(!isEmpty())root=deleteMin(root);	
-	}
-	private Node deleteMin(Node n){
-		if(n.getLeft()==null)return n.getRight();
-		n.setLeft(deleteMin(n.getLeft()));
-		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
-		recursiveBalance(n);//delete 후 left right balance맞추기 
-		return n;
-	}
-
-	@Override
-	public void delete(Key k) {
-		root=delete(root,k);
-	}
-//	private Node delete(Node n, Key k){
-//		if(n==null)return null;
-//		int t=n.getKey().compareTo(k);
-//		if(t>0){
-//			n.setLeft(delete(n.getLeft(),k));
-//			recursiveBalance(n);
-//		}
-//		else if(t<0){
-//			n.setRight(delete(n.getRight(),k));
-//			recursiveBalance(n);
-//		}
-//		else{
-//			if(n.getRight()==null)return n.getLeft();
-//			if(n.getLeft()==null)return n.getRight();
-//			Node target=n;
-//			n=min(target.getRight());
-//			n.setRight(delete(n.getRight(),(Key)n.getKey()));
-////			n.setRight(deleteMin(target.getRight()));
-////			n.setLeft(target.getLeft());
-//		}
-//		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
-//		recursiveBalance(n);
-//		return n;
-//	}
-	private Node delete(Node n, Key k){
-		if(n==null)return null;
-		int t=n.getKey().compareTo(k);
-		if(t>0){
-			n.setLeft(delete(n.getLeft(),k));
-			recursiveBalance(n);
-		}
-		else if(t<0){
-			n.setRight(delete(n.getRight(),k));
-			recursiveBalance(n);
-		}
-		else{
-			if (n.getLeft() == null && n.getRight() == null)
-				return null;
-			if(n.getLeft()==null)return n.getRight();
-			if(n.getRight()==null)return n.getLeft();
-			Node target=n;
-			n=min(target.getRight());
-			n.setRight(deleteMin(target.getRight()));
-			n.setLeft(target.getLeft());
-			
-		}
-		n.setSubTreeSize(1+size(n.getLeft())+size(n.getRight()));
-		recursiveBalance(n);
-		return n;
-	}
-	@Override
 	public String printTree() {
 		LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
 		
 		myQueue.offer(root);
-		
-		String returnString = "";
+		StringBuilder sb=new StringBuilder();
 		Node<Key,Value> temp;
 		int count = 0;
 		int level = 0;
@@ -239,12 +186,12 @@ public class AVL <Key extends Comparable<Key>, Value> extends Testing implements
 		while (level <= height(root)) {
 			temp = myQueue.poll();
 			if (temp == null) {
-				returnString += " ";
+				sb.append(" ");
 				myQueue.offer(null);
 				myQueue.offer(null);
 			}
 			else {
-				returnString += " " + temp.getKey().toString();
+				sb.append(" "+temp.getKey().toString());
 				myQueue.offer(temp.getLeft());
 				myQueue.offer(temp.getRight());
 			}
@@ -254,8 +201,9 @@ public class AVL <Key extends Comparable<Key>, Value> extends Testing implements
 				count = 0;
 			}
 		}
-		return returnString;
+		return sb.toString().substring(1);
 	}
+	
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
