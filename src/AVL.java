@@ -1,7 +1,7 @@
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Key, Value> {
+public class AVL <Key extends Comparable<Key>, Value> extends Testing implements CommonMethod<Key, Value> {
 	private Node<Key, Value> root;
 	
 	public AVL(){

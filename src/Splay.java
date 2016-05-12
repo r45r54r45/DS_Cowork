@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-public class Splay <Key extends Comparable<Key>, Value> implements CommonMethod<Key, Value> {
+public class Splay <Key extends Comparable<Key>, Value> extends Testing implements CommonMethod<Key, Value> {
 	private Node<Key, Value> root;
 	
 	public Splay() { }

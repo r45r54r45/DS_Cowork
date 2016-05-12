@@ -2,7 +2,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-public class RB <Key extends Comparable<Key>, Value> implements CommonMethod<Key, Value> {
+public class RB <Key extends Comparable<Key>, Value> extends Testing implements CommonMethod<Key, Value> {
 	 private static final boolean RED   = true; 
 	 private static final boolean BLACK = false;
 	

@@ -1,7 +1,7 @@
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Key, Value>{
+public class BST <Key extends Comparable<Key>, Value> extends Testing implements CommonMethod<Key, Value> {
 	private Node<Key, Value> root;
 	public Node<Key, Value> getRoot(){return root;}
 	public int size(){return size(root);}
@@ -11,6 +11,7 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	}
 	public BST(){
 		root=null;
+		testFlag=false;
 	}
 	public void reset(){
 		root=null;
@@ -22,6 +23,7 @@ public class BST <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	public boolean contains(Key k){return get(k)!=null;}
 	@Override
 	public Value get(Key k) {
+		test("put your syso test message here");
 		return get(root,k);
 	}
 	private Value get(Node n, Key k){
