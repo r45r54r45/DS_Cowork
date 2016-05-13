@@ -188,7 +188,9 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 			test("deleteMin1");
 			// TODO Auto-generated method stub
 			 root = deleteMin(root);
-			 root.setColor(BLACK); }
+			 if(root!=null)
+			 root.setColor(BLACK); 
+			 }
 		
 		private Node deleteMin(Node h) {
 			test("deleteMin2");
@@ -226,7 +228,7 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 		public void delete(Key k){
 			test ("딜릿1");
 			if(root == null) System.out.println("딜릿 할게 없음");
-			else root = delete(root, k);
+			else root = delete(root, k); 
 			if(root == null) System.out.println("바꿀 색이 없음");
 			else root.setColor(BLACK);
 			}
@@ -239,8 +241,7 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 			else if (k.compareTo((Key)h.getKey()) > 0) 
 				if (h.getRight() != null) delete(h.getRight(), k);
 			else {delete_fin(h);}
-			
-			root = delete(root, k);
+
 			root.setColor(BLACK);
 		       return h;
 		       }
@@ -309,7 +310,7 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 		
 		protected void rbRemoveFixup(Node x) {
 		      Node w = null;
-		     
+
 		      while ((x != root) && !(isRed(x))) {
 		    	  if(x.getParent().getLeft() != null)
 		          if (x == x.getParent().getLeft()) {
@@ -395,38 +396,9 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 
 		
 
-	@Override
-	public String printTree() {
-	LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
-		
-		myQueue.offer(root);
-		
-		String returnString = "";
-		Node<Key,Value> temp;
-		int count = 0;
-		int level = 0;
-		
-		while (level <= root.getSubTreeSize()) {
-			temp = myQueue.poll();
-			if (temp == null) {
-				returnString += " ";
-				myQueue.offer(null);
-				myQueue.offer(null);
-			}
-			else {
-				returnString +=" "+temp.getKey().toString();
-				myQueue.offer(temp.getLeft());
-				myQueue.offer(temp.getRight());
-			}
-			count++;
-			if (count >= Math.pow(2, level)) {
-				level++;
-				count = 0;
-			}
-		}
-		return returnString.substring(1);
+	public String printTree(){
+		return super.printTree(root);
 	}
-
 
 	@Override
 	public void reset() {

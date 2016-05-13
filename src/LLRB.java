@@ -228,49 +228,8 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	       return fixUp(h);
 	       }
 
-	@Override
-	public String printTree() {
-
-		String arr[]=new String[64];
-		for(int i=0; i<64; i++){
-			arr[i]="";
-		}
-		arr[1]=root.getKey().toString();
-		int num=2;
-		Queue<Node> q=new LinkedList<Node>();
-		q.offer(root);
-		while(!q.isEmpty()){
-			if(num==64)break;
-			Node temp=q.poll();
-			if((int)temp.getKey()==-1){
-				arr[num++]="";
-				arr[num++]="";
-				q.offer(new Node(-1,"fake"));
-				q.offer(new Node(-1,"fake"));
-			}else{
-				if(temp.getLeft()!=null){
-					arr[num++]=temp.getLeft().getKey().toString();
-					q.offer(temp.getLeft());
-				}else{
-					arr[num++]="";
-					q.offer(new Node(-1,"fake"));
-				}
-				if(temp.getRight()!=null){
-					arr[num++]=temp.getRight().getKey().toString();
-					q.offer(temp.getRight());
-				}else{
-					arr[num++]="";
-					q.offer(new Node(-1,"fake"));
-				}
-			}
-		}
-		
-		StringBuilder sb=new StringBuilder();
-		for(int i=1; i<64; i++){
-			sb.append(arr[i]+" ");
-		}
-		return sb.toString().trim();
-
+	public String printTree(){
+		return super.printTree(root);
 	}
 
 
@@ -295,32 +254,6 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 		   return b;
 		  }
 	}
-
-	private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
-	 {
-	  if(root == null)return;
-
-	  if(queue.isEmpty())
-	  {
-	   resultList.add(root.getKey().toString());
-	  }
-	  else
-	  {
-	   resultList.add(queue.getFirst().getKey().toString());
-	  }
-
-	  if(root.getLeft() != null)
-	  {
-	   queue.add(root.getLeft());
-	  }
-	  if(root.getRight() != null)
-	  {
-	   queue.add(root.getRight());
-	  }
-	  levelOrder(root.getLeft(),queue, resultList);
-	  levelOrder(root.getRight(),queue,resultList);
-	 }
-
 
 
 	public void reset() {

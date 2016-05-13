@@ -150,47 +150,8 @@ public class Splay <Key extends Comparable<Key>, Value> extends Testing implemen
 		  return 1 + Math.max(height(cur.getLeft()), height(cur.getRight()));
 	}
 
-	@Override
-	public String printTree() {//P
-		String arr[]=new String[64];
-		for(int i=0; i<64; i++){
-			arr[i]="";
-		}
-		arr[1]=root.getKey().toString();
-		int num=2;
-		Queue<Node> q=new LinkedList<Node>();
-		q.offer(root);
-		while(!q.isEmpty()){
-			if(num==64)break;
-			Node temp=q.poll();
-			if((int)temp.getKey()==-1){
-				arr[num++]="";
-				arr[num++]="";
-				q.offer(new Node(-1,"fake"));
-				q.offer(new Node(-1,"fake"));
-			}else{
-				if(temp.getLeft()!=null){
-					arr[num++]=temp.getLeft().getKey().toString();
-					q.offer(temp.getLeft());
-				}else{
-					arr[num++]="";
-					q.offer(new Node(-1,"fake"));
-				}
-				if(temp.getRight()!=null){
-					arr[num++]=temp.getRight().getKey().toString();
-					q.offer(temp.getRight());
-				}else{
-					arr[num++]="";
-					q.offer(new Node(-1,"fake"));
-				}
-			}
-		}
-		
-		StringBuilder sb=new StringBuilder();
-		for(int i=1; i<64; i++){
-			sb.append(arr[i]+" ");
-		}
-		return sb.toString().trim();
+	public String printTree(){
+		return super.printTree(root);
 	}
 	@Override
 	public void reset() {

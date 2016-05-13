@@ -40,7 +40,7 @@ public class Node <Key extends Comparable<Key>, Value>{
 	public void setColor(boolean c){this.color = c;}
 	public Key getKey(){return id;}
 	public Value getValue(){return name;}
-	public int getHeight(){return balance;}
+	public int getHeight(){return findHeight(this);}
 	public int getSubTreeSize(){return subTreeSize;}
 	public Node<Key, Value> getLeft(){return left;}
 	public Node<Key, Value> getRight() {return right;}
@@ -63,7 +63,7 @@ public class Node <Key extends Comparable<Key>, Value>{
 	public void setSubTreeSize(int newSubTreeSize) {
 		this.subTreeSize = newSubTreeSize;
 	}
-	public void setBalance(int bal) {
+	public void setHeight(int bal) {
 		this.balance=bal;
 	}
 	public void print() {
@@ -85,5 +85,24 @@ public class Node <Key extends Comparable<Key>, Value>{
     }
     public boolean isLeaf() {
         return this.getLeft() == null && this.getRight() == null;
+    }
+   public int findHeight(Node aNode)
+    {
+        if (aNode == null)
+        {
+            return -1;
+        }
+
+        int lefth = findHeight(aNode.left);
+        int righth = findHeight(aNode.right);
+
+        if(lefth > righth)
+        {
+            return lefth + 1;
+        }
+        else
+        {
+            return righth + 1;
+        }
     }
 }
