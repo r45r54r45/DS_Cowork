@@ -325,7 +325,6 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 
 	public void reset() {
 		// TODO Auto-generated method stub
-		System.out.println(printTree());
 		root=null;
 	}
 

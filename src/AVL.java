@@ -104,30 +104,31 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 		return x;
 	}
 	public Node rotateLL(Node old){
-		Node newNode = old.getLeft();
-		old.setLeft(newNode.getRight());
-		newNode.setRight(old);
-		balance(old);
-		balance(newNode);
-		return newNode;
-	}
-	public Node rotateRR(Node old){
 		Node newNode = old.getRight();
-	
+
 		old.setRight(newNode.getLeft());
 		newNode.setLeft(old);
 		balance(old);
 		balance(newNode);
+		
+		return newNode;
+	}
+	public Node rotateRR(Node old){
+		Node newNode = old.getLeft();
+		old.setLeft(newNode.getRight());
+		newNode.setRight(old);
+		old.setBalance( max(old) + 1);
+		newNode.setBalance( max(newNode) + 1);
 		return newNode;
 	}
 	public Node rotateLR(Node old){
-		old.setLeft(this.rotateRR(old.getLeft()));
-		return rotateLL(old);
+		old.setLeft(this.rotateLL(old.getLeft()));
+		return rotateRR(old);
 	}
 	
 	public Node rotateRL(Node old){
-		old.setRight(rotateLL(old.getRight()));
-		return rotateRR(old);
+		old.setRight(rotateRR(old.getRight()));
+		return rotateLL(old);
 	}
 
 	@Override
@@ -175,6 +176,19 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 		  } else {
 		   return b;
 		  }
+	}
+	public int max(Node x){
+		int left , right;
+		if (x.getLeft() == null && x.getRight() == null){
+			return 0;
+		}
+		
+		if (x.getLeft() == null) left = 0;
+		else left = x.getLeft().getHeight();
+
+		if (x.getRight() == null) right = 0;
+		else right = x.getRight().getHeight();	
+		return (left > right ? left : right);
 	}
 	@Override
 	public String printTree() {

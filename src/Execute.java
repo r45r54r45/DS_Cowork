@@ -25,9 +25,11 @@ public class Execute {
 		long[] inst_total_time=new long[6];
 		long[] inst_avr_time=new long[6];
 		long[] inst_call=new long[6];
-		System.out.println("----------------------------------------------- ");
-		System.out.println("| "+object.toString().split("@")[0]+"'s statistic");
-		System.out.println("----------------------------------------------- ");
+		if (TIME_CHECK) {
+			System.out.println("----------------------------------------------- ");
+			System.out.println("| "+object.toString().split("@")[0]+"'s statistic");
+			System.out.println("----------------------------------------------- ");
+		}
 		for (int i = 0; i < TEST_CASES_NUM; i++) {
 			LinkedList<ReadFile.InstructionSet> instructionList=arrayList.get(i);
 			if (TIME_CHECK) {
