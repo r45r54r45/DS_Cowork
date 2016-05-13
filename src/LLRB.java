@@ -230,6 +230,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 
 	@Override
 	public String printTree() {
+
 		String arr[]=new String[64];
 		for(int i=0; i<64; i++){
 			arr[i]="";
@@ -269,6 +270,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 			sb.append(arr[i]+" ");
 		}
 		return sb.toString().trim();
+
 	}
 
 
