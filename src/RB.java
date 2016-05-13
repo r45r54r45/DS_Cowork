@@ -19,60 +19,49 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 		}
 	
 	public RB(){
-		testFlag = true;
 		root = null;
 	}
 	
 	public RB(Key k,Value v){
-		testFlag = true;
 		root=new Node<Key, Value>(k,v,1);
 	}
 	
 	@Override
 	public Value get(Key k) {
-		//test("get1");
-		if (root == null) {test("줄게 없어여!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1트리비어있음"); }
-		else {
-			test("줌");
-		}
+		// TODO Auto-generated method stub
 		return get(root,k);
 	}
+
 	private Value get(Node n, Key k){
-		//test("get2");
-		//System.out.println(">>>>>>>>>>>>>>>>>>>>>" + n.getValue());
-		if(n==null) {test("줄게 없어여!!!!!!!!!!!!!!!!!!!!!!!!!!!");return null;} 
+		if(n==null)return null;
 		int t=n.getKey().compareTo(k);
-		
 		if(t>0)return get(n.getLeft(),k);
 		else if(t<0)return get(n.getRight(),k);
-		else{
-		//test("여기");
-		return (Value)n.getValue();}
+		else return (Value)n.getValue();
 	}
 
 	@Override
 	public void put(Key k, Value v) {
-		//test("put1");
 		// TODO Auto-generated method stub
 		root = put((Node)root, (Key)k, (Value)v);
 		root.setColor(BLACK);
 	} 
 	
 	public Node put(Node h, Key k, Value v) {
-		//test("put2");
 		// TODO Auto-generated method stub
-		   if (h == null) return (new Node<Key, Value>(k, v,1)); //없다고 null 주면 잣됨
+		   if (h == null) return (new Node<Key, Value>(k, v,1));
 	       int cmp = k.compareTo((Key)h.getKey());
 	       if(cmp<0)  h.setLeft(put(h.getLeft(), k, v));
 	       else if (cmp>0) h.setRight(put(h.getRight(), k, v));
 	       else h.setName(v); 
+
 	      //fix up any right leaning links or links with sequential red
 	       rbInsertFixup(h);
-	       
+
 	       h.setSubTreeSize(1+size(h.getLeft())+size(h.getRight()));
-			//if (h!= null)System.out.println(">>>>>>>>>putputput>>>>>>>>>>>>" + h.getValue());
 	       return h;   
 	       } 
+
 	
 	 protected void rbInsertFixup(Node z) {
 	    	while (isRed(z.getParent())) {
@@ -133,29 +122,18 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 	      root.setColor(BLACK);
 	    }
 	
-	
-	
+
+
+
 	public Node rotateLeft(Node h){
-	//test("rotateLeft");
-	Node x = h.getRight();
-	if(h==null) return null; //////////////////맞나
-	h.setRight(x.getLeft());
-	x.setLeft(h);
-	x.setColor(h.getColor());
-	h.setColor(RED);
-	  return x;
-	}
-	
-	public Node rotateRight(Node h) {
-		//test("rotateRight");
-		Node x = h.getLeft();
-		if(h==null) return null; //////////////////맞나
-		h.setLeft(x.getRight());
-		x.setRight(h);
+		Node x = h.getRight();
+		h.setRight(x.getLeft());
+		x.setLeft(h);
 		x.setColor(h.getColor());
 		h.setColor(RED);
 		return x;
 		}
+
 	
 
 	public void colorFlip(Node h){
@@ -170,27 +148,34 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 
 	public boolean isEmpty(){return (size()==0);}
 
+		
+		public Node rotateRight(Node h) {
+			Node x = h.getLeft();
+			h.setLeft(x.getRight());
+			x.setRight(h);
+			x.setColor(h.getColor());
+			h.setColor(RED);
+			return x;
+			}
 
 
-	public Key min() {
-		//test("first min1");
-		// TODO Auto-generated method stub
-		if (isEmpty()) return null;
-		else 
-		return (Key)min(root).getKey();
-	}
-	
-	private Node min(Node n){
-		//test("min2");
-		if (n==null) return null;
-		while (n.getLeft()!=null)
-			n = n.getLeft();
-		return n;
-	}
+
+		@Override
+		public Key min() {
+			// TODO Auto-generated method stub
+			if (isEmpty()) return null;
+			return (Key)min(root).getKey();
+		}
+		
+		private Node min(Node n){
+			if (n.getLeft()==null) return n;
+			return min(n.getLeft());
+		}
+		
 		private Node fixUp(Node n){
 			//general rb tree의 leaf node 는 다 black 이어야 함
-			//if ((n.getLeft() == null) && (n.getRight() == null)) n.setColor(BLACK);
-			if (isRed(n.getRight()) && isRed(n.getRight().getRight())) n = rotateLeft(n);
+			if ((n.getLeft() == null) && (n.getRight() == null)) n.setColor(BLACK);
+		    if (isRed(n.getRight()) && isRed(n.getRight().getRight())) n = rotateLeft(n);
 			if(isRed(n.getLeft()) && isRed(n.getLeft().getLeft())) n = rotateRight(n);
 			if(isRed(n.getLeft()) && isRed(n.getRight())) colorFlip(n);
 			
@@ -202,9 +187,8 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 		public void deleteMin() {
 			test("deleteMin1");
 			// TODO Auto-generated method stub
-			if(root!=null) root = deleteMin(root);
-			if(root!=null) root.setColor(BLACK); 
-		}
+			 root = deleteMin(root);
+			 root.setColor(BLACK); }
 		
 		private Node deleteMin(Node h) {
 			test("deleteMin2");
@@ -222,34 +206,22 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 		}
 
 		private Node moveRedLeft(Node h){
-			test("moveRedLeft");
 			colorFlip(h);
-			if (h != null) {
-				if (h.getRight() != null) {
-					if (isRed(h.getRight().getLeft()))
-						{h.setRight(rotateRight(h.getRight()));
-						h = rotateLeft(h);
-						colorFlip(h);
-						}
-					}
-			}
+			if (isRed(h.getRight().getLeft()))
+				{h.setRight(rotateRight(h.getRight()));
+				h = rotateLeft(h);
+				colorFlip(h);
+				}
 			return h;   }
 		
 		private Node moveRedRight(Node h){
-			//test("moveRedRight");
-		
 			colorFlip(h);
-			if (h !=null){
-				if (h.getLeft() != null) {
-					if (isRed(h.getLeft().getLeft())){
-						h = rotateRight(h);
-						colorFlip(h);
-						} 
-				}
-			}
+			if (isRed(h.getLeft().getLeft())){
+				h = rotateRight(h);
+				colorFlip(h);
+				}      
 			return h;
 			}
-
 		
 		public void delete(Key k){
 			test ("딜릿1");
@@ -267,6 +239,9 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 			else if (k.compareTo((Key)h.getKey()) > 0) 
 				if (h.getRight() != null) delete(h.getRight(), k);
 			else {delete_fin(h);}
+			
+			root = delete(root, k);
+			root.setColor(BLACK);
 		       return h;
 		       }
 
@@ -422,23 +397,24 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 
 	@Override
 	public String printTree() {
-LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
+	LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
 		
 		myQueue.offer(root);
-		StringBuilder sb=new StringBuilder();
+		
+		String returnString = "";
 		Node<Key,Value> temp;
 		int count = 0;
 		int level = 0;
 		
-		while (level <= height(root)) {
+		while (level <= root.getSubTreeSize()) {
 			temp = myQueue.poll();
 			if (temp == null) {
-				sb.append(" ");
+				returnString += " ";
 				myQueue.offer(null);
 				myQueue.offer(null);
 			}
 			else {
-				sb.append(" "+temp.getKey().toString());
+				returnString +=" "+temp.getKey().toString();
 				myQueue.offer(temp.getLeft());
 				myQueue.offer(temp.getRight());
 			}
@@ -448,7 +424,7 @@ LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
 				count = 0;
 			}
 		}
-		return sb.toString().substring(1);
+		return returnString.substring(1);
 	}
 
 
@@ -466,6 +442,7 @@ LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
 		else return n.getParent().getLeft();
 	}
 
+
 	private int height(Node cur) {
 		  if(cur==null) {
 		   return -1;
@@ -479,17 +456,46 @@ LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
 		  } else {
 		   return 1+maximum(height(cur.getLeft()),height(cur.getRight()));
 		  }
-	}
-	
-	private int maximum(int a, int b) {
+	}private int maximum(int a, int b) {
 		  if(a>=b) {
-		   return a;
-		  } else {
-		   return b;
-		  }
-	}
-	
-}
+			   return a;
+			  } else {
+			   return b;
+			  }
+		}
 
+		private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
+		 {
+		  if(root == null)return;
+
+		  if(queue.isEmpty())
+		  {
+		   resultList.add(root.getKey().toString());
+		  }
+		  else
+		  {
+		   resultList.add(queue.getFirst().getKey().toString());
+		  }
+
+		  if(root.getLeft() != null)
+		  {
+		   queue.add(root.getLeft());
+		  }
+		  if(root.getRight() != null)
+		  {
+		   queue.add(root.getRight());
+		  }
+		  levelOrder(root.getLeft(),queue, resultList);
+		  levelOrder(root.getRight(),queue,resultList);
+		 }
+
+
+
+	
+	}
+
+
+	
+	
 
 
