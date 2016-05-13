@@ -76,6 +76,9 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 	       return h;   
 	       } 
 	
+	
+	
+	
 	public Node rotateLeft(Node h){
 	//test("rotateLeft");
 	Node x = h.getRight();
@@ -100,7 +103,7 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 	
 
 	public void colorFlip(Node h){
-		//test("colorFlip");
+		test("colorFlip");
 		h.setColor(!h.getColor());
 		//if (h.getLeft() != null)
 			h.getLeft().setColor(!h.getLeft().getColor());
@@ -129,6 +132,8 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 		return n;
 	}
 		private Node fixUp(Node n){
+			//general rb tree의 leaf node 는 다 black 이어야 함
+			//if ((n.getLeft() == null) && (n.getRight() == null)) n.setColor(BLACK);
 			if (isRed(n.getRight()) && isRed(n.getRight().getRight())) n = rotateLeft(n);
 			if(isRed(n.getLeft()) && isRed(n.getLeft().getLeft())) n = rotateRight(n);
 			if(isRed(n.getLeft()) && isRed(n.getRight())) colorFlip(n);
@@ -139,14 +144,14 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 
 		@Override
 		public void deleteMin() {
-			//test("딜민1");
+			test("deleteMin1");
 			// TODO Auto-generated method stub
 			if(root!=null) root = deleteMin(root);
 			if(root!=null) root.setColor(BLACK); 
 		}
 		
 		private Node deleteMin(Node h) {
-			//test("딜민2");
+			test("deleteMin2");
 			if (h== null) {return null;	}
 			if(h.getLeft() == null) {
 				h=null; 
@@ -155,7 +160,7 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 			if (!isRed(h.getLeft()) && !isRed(h.getLeft().getLeft()))
 				h = moveRedLeft(h);
 		    h.setLeft(deleteMin(h.getLeft()));
-		    test("fixing up");
+		    //test("fixing up");
 		   return fixUp(h); 
 		}
 
@@ -190,7 +195,7 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 
 		
 		public void delete(Key k){
-			//test ("딜릿1");
+			test ("딜릿1");
 			if(root == null) System.out.println("딜릿 할게 없음");
 			else root = delete(root, k);
 			if(root == null) System.out.println("바꿀 색이 없음");
@@ -198,7 +203,7 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 			}
 		
 		private Node delete(Node h, Key k){
-			//test ("딜릿2");
+			test ("딜릿2");
 			if (h == null) return null;
 			if (k.compareTo((Key)h.getKey()) < 0)
 				if (h.getLeft() != null) delete(h.getLeft(), k);

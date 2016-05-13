@@ -13,8 +13,8 @@ public class Execute {
 		writer = new WriteFile("output.txt");
 //		Execute.executeInstructions(new BST<Integer, String>(), reader.getCases());
 // 	Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
-    //	Execute.executeInstructions(new RB<Integer, String>(), reader.getCases());
-	Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
+    	Execute.executeInstructions(new RB<Integer, String>(), reader.getCases());
+//	Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new Splay<Integer, String>(), reader.getCases());
 	}
  
