@@ -54,14 +54,76 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 	       if(cmp<0)  h.setLeft(put(h.getLeft(), k, v));
 	       else if (cmp>0) h.setRight(put(h.getRight(), k, v));
 	       else h.setName(v); 
-	      //fix up any links with sequential red or child is red
-	       if (isRed(h.getRight()) && isRed(h.getRight().getRight())) h = rotateLeft(h);
-	       if (isRed(h.getLeft()) && isRed(h.getLeft().getLeft())) h = rotateRight(h);
-	       if (isRed(h.getLeft()) && isRed(h.getRight())) colorFlip(h);
-	       
+
+	      //fix up any right leaning links or links with sequential red
+	       rbInsertFixup(h);
+
 	       h.setSubTreeSize(1+size(h.getLeft())+size(h.getRight()));
 	       return h;   
 	       } 
+
+	
+	 protected void rbInsertFixup(Node z) {
+	    	while (isRed(z.getParent())) {
+	        if (z.getParent() == z.getParent().getParent().getLeft()) {
+	          // z's parent is a left child.
+	          Node y = z.getParent().getParent().getRight();
+	          if (isRed(y)) {
+	            // Case 1: z's uncle y is red.
+//	            System.out.println("rbInsertFixup: Case 1 left");
+	            (z.getParent()).setColor(BLACK);
+	            y.setColor(BLACK);
+	            z.getParent().getParent().setColor(RED);
+	            z = z.getParent().getParent();
+	          }
+	          else {
+	            if (z == z.getParent().getRight()) {
+	              // Case 2: z's uncle y is black and z is a right child.
+//	              System.out.println("rbInsertFixup: Case 2 left");
+	              z = z.getParent();
+	              rotateLeft(z);
+	            }
+	            // Case 3: z's uncle y is black and z is a left child.
+//	            System.out.println("rbInsertFixup: Case 3 left");
+	             z.getParent().setColor(BLACK);
+	             z.getParent().getParent().setColor(RED);
+	             rotateRight(z.getParent().getParent());
+	          }
+	        }
+	        else {
+	          // z's parent is a right child.  Do the same as when z's
+	          // parent is a left child, but exchange "left" and "right."
+	          Node y =z.getParent().getParent().getLeft();
+	          if (isRed(y)) {
+	            // Case 1: z's uncle y is red.
+//	            System.out.println("rbInsertFixup: Case 1 right");
+	            z.getParent().setColor(BLACK);
+	            y.setColor(BLACK);
+	            z.getParent().getParent().setColor(RED);
+	            z = z.getParent().getParent();
+	          }
+	          else {
+	            if (z == z.getParent().getLeft()) {
+	              // Case 2: z's uncle y is black and z is a left child.
+//	              System.out.println("rbInsertFixup: Case 2 right");
+	              z =z.getParent();
+	             rotateRight(z);
+	            }
+	            // Case 3: z's uncle y is black and z is a right child.
+//	            System.out.println("rbInsertFixup: Case 3 right");
+	            z.getParent().setColor(BLACK);
+	            z.getParent().getParent().setColor(RED);
+	            rotateLeft(z.getParent().getParent());
+	          }
+	        }
+	      }
+
+	      // The root is always black.
+	      root.setColor(BLACK);
+	    }
+	
+
+
 
 	public Node rotateLeft(Node h){
 		Node x = h.getRight();
@@ -71,6 +133,21 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 		h.setColor(RED);
 		return x;
 		}
+
+	
+
+	public void colorFlip(Node h){
+		test("colorFlip");
+		h.setColor(!h.getColor());
+		//if (h.getLeft() != null)
+			h.getLeft().setColor(!h.getLeft().getColor());
+		//if (h.getRight() != null)
+			h.getRight().setColor(!h.getRight().getColor());
+		}
+
+
+	public boolean isEmpty(){return (size()==0);}
+
 		
 		public Node rotateRight(Node h) {
 			Node x = h.getLeft();
@@ -81,13 +158,7 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 			return x;
 			}
 
-		public boolean isEmpty(){return (size()==0);}
 
-		void colorFlip(Node h){
-			h.setColor(!h.getColor());
-			h.getLeft().setColor(h.getLeft().getColor());
-			h.getRight().setColor(h.getRight().getColor());
-			}
 
 		@Override
 		public Key min() {
@@ -102,6 +173,8 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 		}
 		
 		private Node fixUp(Node n){
+			//general rb tree의 leaf node 는 다 black 이어야 함
+			if ((n.getLeft() == null) && (n.getRight() == null)) n.setColor(BLACK);
 		    if (isRed(n.getRight()) && isRed(n.getRight().getRight())) n = rotateLeft(n);
 			if(isRed(n.getLeft()) && isRed(n.getLeft().getLeft())) n = rotateRight(n);
 			if(isRed(n.getLeft()) && isRed(n.getRight())) colorFlip(n);
@@ -112,16 +185,24 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 
 		@Override
 		public void deleteMin() {
+			test("deleteMin1");
 			// TODO Auto-generated method stub
 			 root = deleteMin(root);
 			 root.setColor(BLACK); }
 		
 		private Node deleteMin(Node h) {
-			if (h.getLeft() == null) return null;
+			test("deleteMin2");
+			if (h== null) {return null;	}
+			if(h.getLeft() == null) {
+				h=null; 
+				return null;
+			}
 			if (!isRed(h.getLeft()) && !isRed(h.getLeft().getLeft()))
 				h = moveRedLeft(h);
 		    h.setLeft(deleteMin(h.getLeft()));
-		   return fixUp(h); 
+		    //test("fixing up");
+		    rbRemoveFixup(h);
+		   return h;
 		}
 
 		private Node moveRedLeft(Node h){
@@ -143,40 +224,176 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 			}
 		
 		public void delete(Key k){
-			root = delete(root, k);
-			root.setColor(BLACK);
+			test ("딜릿1");
+			if(root == null) System.out.println("딜릿 할게 없음");
+			else root = delete(root, k);
+			if(root == null) System.out.println("바꿀 색이 없음");
+			else root.setColor(BLACK);
 			}
 		
 		private Node delete(Node h, Key k){
-			if (k.compareTo((Key)h.getKey()) < 0) delete(h.getLeft(), k);
-			else if (k.compareTo((Key)h.getKey()) > 0) delete(h.getRight(), k);
-			else delete_one_child(h);
-
+			test ("딜릿2");
+			if (h == null) return null;
+			if (k.compareTo((Key)h.getKey()) < 0)
+				if (h.getLeft() != null) delete(h.getLeft(), k);
+			else if (k.compareTo((Key)h.getKey()) > 0) 
+				if (h.getRight() != null) delete(h.getRight(), k);
+			else {delete_fin(h);}
 			
-		/*	if (k.compareTo((Key)h.getKey()) < 0){              
-				if (!isRed(h.getLeft())){
-					if(!isRed(h.getLeft().getRight()) &&  !isRed(h.getLeft().getLeft())) h = moveRedLeft(h); 
-					if(!isRed(h.getLeft().getRight()) &&  isRed(h.getLeft().getLeft())) h.setLeft(rotateRight(h.getLeft())); 
-					if(isRed(h.getLeft().getRight()) &&  !isRed(h.getLeft().getLeft())) h.setLeft(rotateLeft(h.getLeft())); 
-					if(isRed(h.getLeft().getRight()) &&  isRed(h.getLeft().getLeft())) colorFlip(h.getLeft());
-					}
-				h.setLeft(delete(h.getLeft(), k));
-				}
-			
-			else{
-				if (isRed(h.getLeft()))   h = rotateRight(h);               
-				if (k.compareTo((Key)h.getKey()) == 0 && (h.getRight() == null))  return null;               
-				if (!isRed(h.getRight()) && !isRed(h.getRight().getLeft())) h = moveRedRight(h);               
-				if (k.compareTo((Key)h.getKey()) == 0) {
-					h.setName(get(h.getRight(), (Key)min(h.getRight()).getKey()));
-					h.setId(min(h.getRight()).getKey());
-					h.setRight(deleteMin(h.getRight())); 
-					} 
-				else h.setRight(delete(h.getRight(), k));
-				}*/
+			root = delete(root, k);
+			root.setColor(BLACK);
 		       return h;
 		       }
 
+		
+		public void delete_fin(Node z) { //찾으면 그때 딜리트
+		      Node y = z;   // y is the node either removed or moved within the tree
+		      boolean yOrigWasBlack = !isRed(y);  // need to know whether y was black
+		      Node p;
+		      Node x;       // x is the node that will move into y's original position
+		      if (z.getLeft() ==null) {       // no left child?
+		       p = z.getParent();
+		    	x =  z.getRight();
+		    	if (p.getLeft() == z) p.setLeft(x);
+		    	else p.setRight(x);
+		    	// replace z by its right child
+		      }
+		      else if (z.getRight() == null) { // no right child?
+			       p = z.getParent();
+		    	  x =z.getLeft();
+		    	  if (p.getLeft() == z) p.setLeft(x);
+			    else p.setRight(x);
+	          // replace z by its left child
+		      }
+		      else {
+		        // Node z has two children.  Its successor y is in its right subtree
+		        // and has no left child.
+		    	 Node min = min(z.getRight());
+		        y = min(z.getRight());
+		        yOrigWasBlack = !isRed(y);
+		        x = y.getRight();
+
+		        // Splice y out of its current location, and have it replace z.
+		        if (y.getParent() == z)
+		          x.setParent(y);
+		        else {
+		          // If y is not z's right child, replace y as a child of its parent by
+		          // y's right child and turn z's right child into y's right child.
+		        	 p = y.getParent();
+		 	    	if (p.getLeft() == y) p.setLeft(x);
+		 	    	else p.setRight(x);
+		          y.setRight(z.getRight());
+		          y.getRight().setParent(y);
+		        }
+
+		        // Regardless of whether we found that y was z's right child, replace z as
+		        // a child of its parent by y and replace y's left child by z's left child.
+		        p = z.getParent();
+		    	if (p.getLeft() == z) p.setLeft(y);
+		    	else p.setRight(y);
+		        y.setLeft(z.getLeft());
+		        y.getLeft().setParent(y);
+
+		        // Give y the same color as z.
+		        if (!isRed(z))
+		         y.setColor(BLACK);
+		        else
+		          y.setColor(RED);
+		      }
+
+		      // If we removed a black node, then must fix up the tree because
+		      // black-heights are now incorrect.
+		      if (yOrigWasBlack)
+		        rbRemoveFixup(x);
+		    }
+		
+		protected void rbRemoveFixup(Node x) {
+		      Node w = null;
+		     
+		      while ((x != root) && !(isRed(x))) {
+		    	  if(x.getParent().getLeft() != null)
+		          if (x == x.getParent().getLeft()) {
+		            w =x.getParent().getRight();
+		            if (isRed(w)) {
+		              // Case 1: x's sibling w is red.
+//		              System.out.println("rbRemoveFixup: Case 1 left");
+		              w.setColor(BLACK);
+		             x.getParent().setColor(RED);
+		             rotateLeft(x.getParent());
+		              w =x.getParent().getRight();
+		            }
+		            if (!isRed(w.getLeft()) && !isRed(w.getRight())) {
+		              // Case 2: x's sibling w is black, and both of w's children are black.
+//		              System.out.println("rbRemoveFixup: Case 2 left");
+		              w.setColor(RED);
+		              x =x.getParent();
+		            }
+		            else {
+		              if (!isRed(w.getRight())) {
+		                // Case 3: x's sibling w is black, w's left child is red,
+		                // and w's right child is black.
+//		                System.out.println("rbRemoveFixup: Case 3 left");
+		                w.getLeft().setColor(BLACK);
+		                w.setColor(RED);
+		                rotateRight(w);
+		                w = x.getParent().getRight();
+		              }
+		              // Case 4: x's sibling w is black, and w's right child is red.
+//		              System.out.println("rbRemoveFixup: Case 4 left");
+		              if (!isRed(x.getParent()))
+		                w.setColor(BLACK);
+		              else
+		                w.setColor(RED);
+		              	x.getParent().setColor(BLACK);
+		              	w.getRight().setColor(BLACK);
+		                rotateLeft(x.getParent());
+		                x =root;
+		            }
+		          }
+		          else {
+		            w = x.getParent().getLeft();
+		            if (isRed(w)) {
+		              // Case 1: x's sibling w is red.
+//		              System.out.println("rbRemoveFixup: Case 1 right");
+		              w.setColor(BLACK);
+		              x.getParent().setColor(RED);
+		              rotateRight(x.getParent());
+		              w = x.getParent().getLeft();
+		            }
+		            if (!isRed(w.getRight()) && !isRed(w.getLeft())) {
+		              // Case 2: x's sibling w is black, and both of w's children are black.
+//		              System.out.println("rbRemoveFixup: Case 2 right");
+		              w.setColor(RED);
+		              x = x.getParent();
+		            }
+		            else {
+		              if (!isRed(w.getLeft())) {
+		                // Case 3: x's sibling w is black, w's right child is red,
+		                // and w's left child is black.
+//		                System.out.println("rbRemoveFixup: Case 3 right");
+		                w.getRight().setColor(BLACK);
+		                w.setColor(RED);
+		                rotateLeft(w);
+		                w =x.getParent().getLeft();
+		              }
+		              // Case 4: x's sibling w is black, and w's left child is red.
+//		              System.out.println("rbRemoveFixup: Case 4 right");
+		              if ((!isRed(x.getParent())))
+		                w.setColor(BLACK);
+		              else
+		                w.setColor(RED);
+		                x.getParent().setColor(BLACK);
+		                w.getLeft().setColor(BLACK);
+		              	rotateRight(x.getParent());
+		              x =root;
+		            }
+		          }
+		        }
+
+		      x.setColor(BLACK);
+		    }
+
+		
 
 	@Override
 	public String printTree() {
@@ -224,127 +441,61 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 		if(n==n.getParent().getLeft()) return n.getParent().getRight();
 		else return n.getParent().getLeft();
 	}
-	
-	public void delete_one_child(Node n)
-	{
-	 /*
-	  * Precondition: n has at most one non-null child. if it's leaf
-	  */
-	
-	Node child = null;
-	if (n.getRight() != null){
-		child = new Node(n.getLeft().getKey(), n.getLeft().getValue(), n.getLeft().getSubTreeSize());
-	}
-	else {child = new Node(n.getRight().getKey(), n.getRight().getValue(), n.getRight().getSubTreeSize());}
 
-	Node tmp = n;
-	n = child;
-	child = tmp;
-	 
-	 if (n.getColor() == BLACK) {
-	  if (child.getColor() == RED)
-	   child.setColor(BLACK);
-	  else
-	   delete_case1(child);
-	 }
-	 n = null;
-	}
-	
-	private  void delete_case1(Node n)
-	{
-	 if (n.getParent() != null)
-	  delete_case2(n);
-	}
-	
-	private void delete_case2(Node n)
-	{
-		Node s = sibling(n);
 
-	 if (s.getColor() == RED) {
-	  n.getParent().setColor(RED);
-	  s.setColor(BLACK);
-	  if (n == n.getParent().getLeft())
-	   rotateLeft(n.getParent());
-	  else
-	   rotateRight(n.getParent());
-	 }
-	 delete_case3(n);
+	private int height(Node cur) {
+		  if(cur==null) {
+		   return -1;
+		  }
+		  if(cur.getLeft()==null && cur.getRight()==null) {
+		   return 0;
+		  } else if(cur.getLeft()==null) {
+		   return 1+height(cur.getRight());
+		  } else if(cur.getRight()==null) {
+		   return 1+height(cur.getLeft());
+		  } else {
+		   return 1+maximum(height(cur.getLeft()),height(cur.getRight()));
+		  }
+	}private int maximum(int a, int b) {
+		  if(a>=b) {
+			   return a;
+			  } else {
+			   return b;
+			  }
+		}
+
+		private void levelOrder(Node root, LinkedList<Node> queue, LinkedList resultList )
+		 {
+		  if(root == null)return;
+
+		  if(queue.isEmpty())
+		  {
+		   resultList.add(root.getKey().toString());
+		  }
+		  else
+		  {
+		   resultList.add(queue.getFirst().getKey().toString());
+		  }
+
+		  if(root.getLeft() != null)
+		  {
+		   queue.add(root.getLeft());
+		  }
+		  if(root.getRight() != null)
+		  {
+		   queue.add(root.getRight());
+		  }
+		  levelOrder(root.getLeft(),queue, resultList);
+		  levelOrder(root.getRight(),queue,resultList);
+		 }
+
+
+
+	
 	}
-	
-	private void delete_case3(Node n)
-	{
-	 Node s = sibling(n);
 
-	 if ((n.getParent().getColor() == BLACK) &&
-	     (s.getColor() == BLACK) &&
-	     (s.getLeft().getColor() == BLACK) &&
-	     (s.getRight().getColor() == BLACK)) {
-	  s.setColor(RED);
-	  delete_case1(n.getParent());
-	 } else
-	  delete_case4(n);
-	}
-	
-	private void delete_case4(Node n)
-	{
-		 Node s = sibling(n);
 
-	 if ((n.getParent().getColor() == RED) &&
-	     (s.getColor() == BLACK) &&
-	     (s.getLeft().getColor() == BLACK) &&
-	     (s.getRight().getColor() == BLACK)) {
-	  s.setColor(RED);
-	  n.getParent().setColor(BLACK);
-	 } else
-	  delete_case5(n);
-	}
-	
-	void delete_case5(Node n)
-	{
-		 Node s = sibling(n);
-
-	 if  (s.getColor() == BLACK) { /* this if statement is trivial,
-	due to case 2 (even though case 2 changed the sibling to a sibling's child,
-	the sibling's child can't be red, since no red parent can have a red child). */
-	/* the following statements just force the red to be on the left of the left of the parent,
-	   or right of the right, so case six will rotate correctly. */
-	  if ((n == n.getParent().getLeft()) &&
-	      (s.getRight().getColor() == BLACK) &&
-	      (s.getLeft().getColor() == RED)) { /* this last test is trivial too due to cases 2-4. */
-	   s.setColor(RED);
-	   s.getLeft().setColor(BLACK);
-	   rotateRight(s);
-	  } else if ((n == n.getParent().getRight()) &&
-	             (s.getLeft().getColor() == BLACK) &&
-	             (s.getRight().getColor() == RED)) {/* this last test is trivial too due to cases 2-4. */
-	   s.setColor(RED);
-	   s.getRight().setColor(BLACK);
-	   rotateLeft(s);
-	  }
-	 }
-	 delete_case6(n);
-	}
-	
-	void delete_case6(Node n)
-	{
-		 Node s = sibling(n);
-
-	 s.setColor(n.getParent().getColor());
-	 n.getParent().setColor(BLACK);
-
-	 if (n == n.getParent().getLeft()) {
-	  s.getRight().setColor(BLACK);
-	  rotateLeft(n.getParent());
-	 } 
-	 else {
-	  s.getLeft().setColor(BLACK);
-	  rotateRight(n.getParent());
-	 }
-	}
 	
 	
-	
-}
-
 
 
