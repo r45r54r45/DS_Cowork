@@ -1,10 +1,14 @@
 import java.util.LinkedList;
+import java.util.Queue;
 
 
 public class Splay <Key extends Comparable<Key>, Value> extends Testing implements CommonMethod<Key, Value> {
 	private Node<Key, Value> root;
 	
-	public Splay() { }
+	public Splay() { 
+		testFlag=true;
+		root=null;
+	}
 	
 	public int size(){return size(root);}
 	private int size(Node x) {
@@ -17,14 +21,18 @@ public class Splay <Key extends Comparable<Key>, Value> extends Testing implemen
         root = splay(root, key);
         int t = key.compareTo(root.getKey());
         if (t == 0) return root.getValue();
-        else          return null;
+        else{
+        	return null;
+        }
     }    
 	@Override
 	public void put(Key key, Value value) {//p
         if (root == null) {
             root = new Node(key, value);
+            test(size()+"");
             return;
         }
+		
         root = splay(root, key);
         int t = key.compareTo(root.getKey());
         if (t < 0) {
@@ -74,12 +82,17 @@ public class Splay <Key extends Comparable<Key>, Value> extends Testing implemen
                 root.setRight(x);
             }
         }
+        else{
+        	test("지우려는게 여기에 없다 ");
+        }
     }
 	private Node splay(Node h, Key key) {
         if (h == null) return null;
         int t1 = key.compareTo((Key)h.getKey());
         if (t1 < 0) {
-            if (h.getLeft() == null){return h;}
+            if (h.getLeft() == null){
+            	return h;
+            	}
             int t2 = key.compareTo((Key)h.getLeft().getKey());
             if (t2 < 0) {
                 h.getLeft().setLeft(splay(h.getLeft().getLeft(), key));
@@ -110,7 +123,9 @@ public class Splay <Key extends Comparable<Key>, Value> extends Testing implemen
             if (h.getRight() == null){return h;}
             else return rotateLeft(h);
         }
-        else return h;
+        else{
+        	return h;
+        }
     }
     private Node rotateRight(Node h) {
         Node x = h.getLeft();
@@ -124,61 +139,64 @@ public class Splay <Key extends Comparable<Key>, Value> extends Testing implemen
         x.setLeft(h);
         return x;
     }
+
     private int height(Node cur) {
 		  if(cur==null) {
 		   return -1;
 		  }
 		  if(cur.getLeft()==null && cur.getRight()==null) {
 		   return 0;
-		  } else if(cur.getLeft()==null) {
-		   return 1+height(cur.getRight());
-		  } else if(cur.getRight()==null) {
-		   return 1+height(cur.getLeft());
-		  } else {
-		   return 1+maximum(height(cur.getLeft()),height(cur.getRight()));
 		  }
+		  return 1 + Math.max(height(cur.getLeft()), height(cur.getRight()));
 	}
-	private int maximum(int a, int b) {
-		  if(a>=b) {
-		   return a;
-		  } else {
-		   return b;
-		  }
-	}
+
 	@Override
 	public String printTree() {//P
-		LinkedList<Node<Key,Value>> queue = new LinkedList<Node<Key,Value>>();
-		
-		queue.offer(root);
-		StringBuilder sb=new StringBuilder();
-		Node<Key,Value> temp;
-		int count = 0;
-		int level = 0;
-		
-		while (level <= height(root)) {
-			temp = queue.poll();
-			if (temp == null) {
-				sb.append(" ");
-				queue.offer(null);
-				queue.offer(null);
-			}
-			else {
-				sb.append(" "+temp.getKey().toString());
-				queue.offer(temp.getLeft());
-				queue.offer(temp.getRight());
-			}
-			count++;
-			if (count >= Math.pow(2, level)) {
-				level++;
-				count = 0;
+		String arr[]=new String[64];
+		for(int i=0; i<64; i++){
+			arr[i]="";
+		}
+		arr[1]=root.getKey().toString();
+		int num=2;
+		Queue<Node> q=new LinkedList<Node>();
+		q.offer(root);
+		while(!q.isEmpty()){
+			if(num==64)break;
+			Node temp=q.poll();
+			if((int)temp.getKey()==-1){
+				arr[num++]="";
+				arr[num++]="";
+				q.offer(new Node(-1,"fake"));
+				q.offer(new Node(-1,"fake"));
+			}else{
+				if(temp.getLeft()!=null){
+					arr[num++]=temp.getLeft().getKey().toString();
+					q.offer(temp.getLeft());
+				}else{
+					arr[num++]="";
+					q.offer(new Node(-1,"fake"));
+				}
+				if(temp.getRight()!=null){
+					arr[num++]=temp.getRight().getKey().toString();
+					q.offer(temp.getRight());
+				}else{
+					arr[num++]="";
+					q.offer(new Node(-1,"fake"));
+				}
 			}
 		}
-		return sb.toString().substring(1);
+		
+		StringBuilder sb=new StringBuilder();
+		for(int i=1; i<64; i++){
+			sb.append(arr[i]+" ");
+		}
+		return sb.toString().trim();
 	}
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
 		root=null;
 	}
+    
 
 }

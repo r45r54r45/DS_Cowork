@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.Queue;
 
 public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Key, Value> {
 	private Node<Key, Value> root;
@@ -18,9 +19,6 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	}
 	public boolean isEmpty(){return (size()==0);}
 	public boolean contains(Key k){return get(k)!=null;}
-	
-	
-	
 	@Override
 	public Value get(Key k) {
 		return get(root,k);
@@ -77,26 +75,31 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 		recursivebalance(n); 
 		return n;
 	}	
-	public int balance(Node root){
-		int right, left;			
-		if (root.getLeft() == null){ left = 0;}
-		else {left = height(root.getLeft());}
-		if (root.getRight() == null){right = 0;}
-		else {right = height(root.getRight());}			
-		return left - right;
+	public int balance(Node x){
+		int left , right;
+		if (x.getLeft() == null && x.getRight() == null){
+			return 0;
+		}
+		
+		if (x.getLeft() == null) left = 0;
+		else left = x.getLeft().getHeight();
+
+		if (x.getRight() == null) right = 0;
+		else right = x.getRight().getHeight();	
+		return (left > right ? left : right);
 	}
 	public Node recursivebalance(Node x){
 		if(balance(x) > 1 ){
 				if (x.getLeft().getLeft() == null) return this.rotateLR(x);
-				if (x.getLeft().getRight() == null) return this.rotateLL(x);
-				if (height(x.getLeft().getLeft()) > height(x.getLeft().getRight()) ) return this.rotateLL(x);
+				if (x.getLeft().getRight() == null) return this.rotateRR(x);
+				if (height(x.getLeft().getLeft()) > height(x.getLeft().getRight()) ) return this.rotateRR(x);
 				else return this.rotateRL(x);
 		}
 		if(balance(x) < -1){
 			if (x.getRight().getRight() == null) return this.rotateRL(x);
-			if (x.getRight().getLeft() == null)	return this.rotateRR(x);
+			if (x.getRight().getLeft() == null)	return this.rotateLL(x);
 			if (height(x.getRight().getLeft()) >height(x.getRight().getRight())) return this.rotateLR(x);
-			else return this.rotateRR(x);
+			else return this.rotateLL(x);
 		}
 		return x;
 	}
@@ -175,33 +178,45 @@ public class AVL <Key extends Comparable<Key>, Value> implements CommonMethod<Ke
 	}
 	@Override
 	public String printTree() {
-		LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
-		
-		myQueue.offer(root);
-		StringBuilder sb=new StringBuilder();
-		Node<Key,Value> temp;
-		int count = 0;
-		int level = 0;
-		
-		while (level <= height(root)) {
-			temp = myQueue.poll();
-			if (temp == null) {
-				sb.append(" ");
-				myQueue.offer(null);
-				myQueue.offer(null);
-			}
-			else {
-				sb.append(" "+temp.getKey().toString());
-				myQueue.offer(temp.getLeft());
-				myQueue.offer(temp.getRight());
-			}
-			count++;
-			if (count >= Math.pow(2, level)) {
-				level++;
-				count = 0;
+		String arr[]=new String[64];
+		for(int i=0; i<64; i++){
+			arr[i]="";
+		}
+		arr[1]=root.getKey().toString();
+		int num=2;
+		Queue<Node> q=new LinkedList<Node>();
+		q.offer(root);
+		while(!q.isEmpty()){
+			if(num==64)break;
+			Node temp=q.poll();
+			if((int)temp.getKey()==-1){
+				arr[num++]="";
+				arr[num++]="";
+				q.offer(new Node(-1,"fake"));
+				q.offer(new Node(-1,"fake"));
+			}else{
+				if(temp.getLeft()!=null){
+					arr[num++]=temp.getLeft().getKey().toString();
+					q.offer(temp.getLeft());
+				}else{
+					arr[num++]="";
+					q.offer(new Node(-1,"fake"));
+				}
+				if(temp.getRight()!=null){
+					arr[num++]=temp.getRight().getKey().toString();
+					q.offer(temp.getRight());
+				}else{
+					arr[num++]="";
+					q.offer(new Node(-1,"fake"));
+				}
 			}
 		}
-		return sb.toString().substring(1);
+		
+		StringBuilder sb=new StringBuilder();
+		for(int i=1; i<64; i++){
+			sb.append(arr[i]+" ");
+		}
+		return sb.toString().trim();
 	}
 	
 	@Override

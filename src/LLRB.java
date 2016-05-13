@@ -2,6 +2,7 @@
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 
 public class LLRB <Key extends Comparable<Key>, Value> extends Testing implements CommonMethod<Key, Value> {
 	 private static final boolean RED   = true; 
@@ -20,11 +21,10 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 		}
 	
 	public LLRB(){
-		testFlag = true;
+		testFlag = false;
 		root=null;
 	}
 	public LLRB(Key k,Value v){
-		testFlag = true;
 		root=new Node<Key, Value>(k,v,1);
 	}
 	
@@ -230,34 +230,45 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 
 	@Override
 	public String printTree() {
-	LinkedList<Node<Key,Value>> myQueue = new LinkedList<Node<Key,Value>>();
-		
-		myQueue.offer(root);
-		
-		String returnString = "";
-		Node<Key,Value> temp;
-		int count = 0;
-		int level = 0;
-		
-		while (level <= height(root)) {
-			temp = myQueue.poll();
-			if (temp == null) {
-				returnString += " ";
-				myQueue.offer(null);
-				myQueue.offer(null);
-			}
-			else {
-				returnString +=" "+temp.getKey().toString();
-				myQueue.offer(temp.getLeft());
-				myQueue.offer(temp.getRight());
-			}
-			count++;
-			if (count >= Math.pow(2, level)) {
-				level++;
-				count = 0;
+		String arr[]=new String[64];
+		for(int i=0; i<64; i++){
+			arr[i]="";
+		}
+		arr[1]=root.getKey().toString();
+		int num=2;
+		Queue<Node> q=new LinkedList<Node>();
+		q.offer(root);
+		while(!q.isEmpty()){
+			if(num==64)break;
+			Node temp=q.poll();
+			if((int)temp.getKey()==-1){
+				arr[num++]="";
+				arr[num++]="";
+				q.offer(new Node(-1,"fake"));
+				q.offer(new Node(-1,"fake"));
+			}else{
+				if(temp.getLeft()!=null){
+					arr[num++]=temp.getLeft().getKey().toString();
+					q.offer(temp.getLeft());
+				}else{
+					arr[num++]="";
+					q.offer(new Node(-1,"fake"));
+				}
+				if(temp.getRight()!=null){
+					arr[num++]=temp.getRight().getKey().toString();
+					q.offer(temp.getRight());
+				}else{
+					arr[num++]="";
+					q.offer(new Node(-1,"fake"));
+				}
 			}
 		}
-		return returnString.substring(1);
+		
+		StringBuilder sb=new StringBuilder();
+		for(int i=1; i<64; i++){
+			sb.append(arr[i]+" ");
+		}
+		return sb.toString().trim();
 	}
 
 
@@ -312,6 +323,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 
 	public void reset() {
 		// TODO Auto-generated method stub
+		System.out.println(printTree());
 		root=null;
 	}
 
