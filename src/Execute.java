@@ -4,18 +4,18 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Execute {
-	private static boolean TIME_CHECK = true;
-	private static int TEST_CASES_NUM = 3;
+	private static boolean TIME_CHECK = false;
+	private static int TEST_CASES_NUM = 20;
 	private static WriteFile writer;
 
 	public static void main(String[] args) {
-		ReadFile reader = new ReadFile("input.txt");
-		writer = new WriteFile("output.txt");
+		ReadFile reader = new ReadFile("c:\\hw5\\input.txt");
+		writer = new WriteFile("c:\\hw5\\2013198070.txt");
 		Execute.executeInstructions(new BST<Integer, String>(), reader.getCases());
 //		Execute.executeInstructions(new AVL<Integer, String>(), reader.getCases());
 //    	Execute.executeInstructions(new RB<Integer, String>(), reader.getCases());
-//		Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
-//		Execute.executeInstructions(new Splay<Integer, String>(), reader.getCases());
+		Execute.executeInstructions(new LLRB<Integer, String>(), reader.getCases());
+		Execute.executeInstructions(new Splay<Integer, String>(), reader.getCases());
 	}
  
 	private static void executeInstructions(CommonMethod<Integer, String> object, ArrayList<LinkedList<ReadFile.InstructionSet>> arrayList) {
@@ -104,8 +104,6 @@ public class Execute {
 				System.out.println("| "+inst+" | "+String.format("%6d", inst_total_time[i]/inst_call[i])+" ns");
 			}	
 			System.out.println("----------------------------------------------- \n");
-			
-//			System.out.println("Total instruction count: "+inst_count);
 		}
 	}
 }

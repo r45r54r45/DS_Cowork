@@ -1,8 +1,4 @@
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
-import java.util.Queue;
 
 public class LLRB <Key extends Comparable<Key>, Value> extends Testing implements CommonMethod<Key, Value> {
 	 private static final boolean RED   = true; 
@@ -28,6 +24,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 		root=new Node<Key, Value>(k,v,1);
 	}
 	
+	@Override
 	public Value get(Key k) {
 		//test("get1");
 		if (root == null) {test("줄게 없어여!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1트리비어있음"); }
@@ -53,7 +50,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	public void put(Key k, Value v) {
 		//test("put1");
 		// TODO Auto-generated method stub
-		root = put((Node)root, (Key)k, (Value)v);
+		root = put(root, k, v);
 		root.setColor(BLACK);
 	} 
 	
@@ -185,6 +182,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 		}
 
 	
+	@Override
 	public void delete(Key k){
 		//test("delete1");
 		if(root == null) System.out.println("딜릿 할게 없음");
@@ -228,6 +226,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	       return fixUp(h);
 	       }
 
+	@Override
 	public String printTree(){
 		return super.printTree(root);
 	}
@@ -256,6 +255,7 @@ public class LLRB <Key extends Comparable<Key>, Value> extends Testing implement
 	}
 
 
+	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
 		root=null;

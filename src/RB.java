@@ -1,6 +1,4 @@
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 
 public class RB <Key extends Comparable<Key>, Value> extends Testing implements CommonMethod<Key, Value> {
 	 private static final boolean RED   = true; 
@@ -43,7 +41,7 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 	@Override
 	public void put(Key k, Value v) {
 		// TODO Auto-generated method stub
-		root = put((Node)root, (Key)k, (Value)v);
+		root = put(root, k, v);
 		root.setColor(BLACK);
 	} 
 	
@@ -225,6 +223,7 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 			return h;
 			}
 		
+		@Override
 		public void delete(Key k){
 			test ("딜릿1");
 			if(root == null) System.out.println("딜릿 할게 없음");
@@ -396,6 +395,7 @@ public class RB <Key extends Comparable<Key>, Value> extends Testing implements 
 
 		
 
+	@Override
 	public String printTree(){
 		return super.printTree(root);
 	}

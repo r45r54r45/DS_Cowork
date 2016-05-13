@@ -40,6 +40,12 @@ public class Node <Key extends Comparable<Key>, Value>{
 	public void setColor(boolean c){this.color = c;}
 	public Key getKey(){return id;}
 	public Value getValue(){return name;}
+	public void setBalance(int b){
+		balance=b;
+	}
+	public int getBalance(){
+		return balance;
+	}
 	public int getHeight(){return findHeight(this);}
 	public int getSubTreeSize(){return subTreeSize;}
 	public Node<Key, Value> getLeft(){return left;}

@@ -1,5 +1,3 @@
-import java.util.LinkedList;
-import java.util.Queue;
 public class BST <Key extends Comparable<Key>, Value> extends Testing implements CommonMethod<Key, Value> {
 	private Node<Key, Value> root;
 	public Node<Key, Value> getRoot(){return root;}
@@ -104,6 +102,7 @@ public class BST <Key extends Comparable<Key>, Value> extends Testing implements
 		   return b;
 		  }
 	}
+	@Override
 	public String printTree(){
 		return super.printTree(root);
 	}

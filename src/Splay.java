@@ -1,12 +1,11 @@
-import java.util.LinkedList;
-import java.util.Queue;
+
 
 
 public class Splay <Key extends Comparable<Key>, Value> extends Testing implements CommonMethod<Key, Value> {
 	private Node<Key, Value> root;
 	
 	public Splay() { 
-		testFlag=true;
+		testFlag=false;
 		root=null;
 	}
 	
@@ -150,6 +149,7 @@ public class Splay <Key extends Comparable<Key>, Value> extends Testing implemen
 		  return 1 + Math.max(height(cur.getLeft()), height(cur.getRight()));
 	}
 
+	@Override
 	public String printTree(){
 		return super.printTree(root);
 	}
